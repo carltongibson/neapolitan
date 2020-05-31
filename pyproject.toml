@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neapolitan"
-version = "0.1.0"
+version = "20.5.0"
 description = ""
 authors = ["Carlton Gibson <carlton.gibson@noumenal.es>"]
 
