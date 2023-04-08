@@ -59,6 +59,12 @@ class Role(enum.Enum):
 
 
 class CRUDView(View):
+    """
+    CRUDView is Neapolitan's core. It provides the standard list, detail,
+    create, edit, and delete views for a model, as well as the hooks you need to
+    be able to customise any part of that.
+    """
+
     role: Role
     success_url: str
     model = None
