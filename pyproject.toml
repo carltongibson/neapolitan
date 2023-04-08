@@ -1,16 +1,15 @@
-[tool.poetry]
-name = "neapolitan"
-version = "20.5.0"
-description = ""
-authors = ["Carlton Gibson <carlton.gibson@noumenal.es>"]
-
-[tool.poetry.dependencies]
-python = "^3.7"
-Django = "^3.0.6"
-
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "neapolitan"
+authors = [{name = "Carlton Gibson", email = "carlton.gibson@noumenal.es"}]
+readme = "README.rst"
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://noumenal.es/neapolitan/"
+
