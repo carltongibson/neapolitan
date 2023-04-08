@@ -12,7 +12,8 @@ dynamic = ["version", "description"]
 dependencies = ["Django"]
 
 [project.urls]
-Home = "https://noumenal.es/neapolitan/"
+Repository = "https://github.com/carltongibson/neapolitan"
+Docs = "https://noumenal.es/neapolitan/"
 
 [project.optional-dependencies]
 docs = ["Sphinx"]
