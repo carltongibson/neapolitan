@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+
+class Bookmark(models.Model):
+    url = models.URLField(unique=True)
+    title = models.CharField(max_length=255)
+    note = models.TextField(blank=True)
