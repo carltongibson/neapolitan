@@ -1,0 +1,26 @@
+            # TODO: make the lookup field configurable. Determined by
+            # lookup_field and lookup_url_kwarg. ???: how to handle the type of
+            # the converter? (int, slug, etc.)
+            # It's just a string that gets passed to path(). SO an extra view
+            # field with the name of a registered converter.
+            path(
+                f"{verbose_name}/<int:pk>/",
+                cls.as_view(role=Role.DETAIL),
+                name=f"{verbose_name}-detail",
+
+
+The type of the PK... 🤔
+    - Mapping from Field type to converter
+
+That could be the default easily enough: for a specific view you just specify the converter. You create a project base-class if that's what you need. (e.g. my `hash` converter)
+
+
+
+
+
+
+
+
+
+
+.. autoclass:: neapolitan.views.CRUDView

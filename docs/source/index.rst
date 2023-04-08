@@ -1,20 +1,39 @@
-.. Neapolitan documentation master file, created by
-   sphinx-quickstart on Sat Apr  8 12:32:21 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to Neapolitan's documentation!
 ======================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+
+I have a Django model::
+
+    from django.db import models
+
+    class Bookmark(models.Model):
+        url = models.URLField(unique=True)
+        title = models.CharField(max_length=255)
+        note = models.TextField(blank=True)
+
+I want easy CRUD views for it, without it taking all day::
+
+    # urls.py
+    from neapolitan.views import CRUDView
+
+    class BookmarkView(CRUDView):
+        model = Bookmark
+        fields = ["url", "title", "note"]
 
 
+    urlpatterns = [ ... ] + BookmarkView.get_urls()
 
-Indices and tables
-==================
+Let's go! 🚀
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+..
+   .. toctree::
+      :maxdepth: 2
+      :caption: Contents:
+
+..
+   Indices and tables
+   ==================
+
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`
