@@ -1,0 +1,26 @@
+<table>
+<thead>
+<tr>
+{% for header in headers %}
+    <th>{{ header }}</th>
+{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for object in object_list %}
+<tr>
+    {% for field in object.fields %}
+        <td>{{ field }}</td>
+    {% endfor %}
+        <td>{{ object.actions }}</td>
+</tr>
+{% endfor %}
+</tbody>
+
+
+
+
+
+
+
+</table>

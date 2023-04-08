@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load neapolitan %}
+
+{% block content %}
+
+
+<p>{{ object }}</p>
+
+
+{% object_detail object view.fields %}
+
+
+{% endblock %}

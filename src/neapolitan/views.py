@@ -3,10 +3,10 @@ import enum
 from django.core.exceptions import ImproperlyConfigured
 from django.core.paginator import InvalidPage, Paginator
 from django.db import models
+from django.forms import models as model_forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.forms import models as model_forms
 from django.urls import path, reverse
 from django.utils.decorators import classonlymethod
 from django.utils.translation import gettext as _
@@ -62,7 +62,7 @@ class CRUDView(View):
     role: Role
     success_url: str
     model = None
-    fields = None
+    fields = None  # TODO: handle this being None.
 
     # Object lookup parameters. These are used in the URL kwargs, and when
     # performing the model instance lookup.
@@ -220,6 +220,7 @@ class CRUDView(View):
         kwargs["view"] = self
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
+        kwargs["create_view_name"] = f"{self.model._meta.model_name}-create"
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object
