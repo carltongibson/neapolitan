@@ -17,4 +17,7 @@ Docs = "https://noumenal.es/neapolitan/"
 
 [project.optional-dependencies]
 docs = ["Sphinx"]
-tests = ["coverage"]
+tests = ["coverage", "django_coverage_plugin"]
+
+[tool.coverage.run]
+plugins = ["django_coverage_plugin"]
