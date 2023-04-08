@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils.html import escape
 
 from neapolitan.views import CRUDView
 
@@ -38,3 +39,9 @@ class BasicTests(TestCase):
         self.assertContains(response, self.homepage.title)
         self.assertContains(response, self.github.title)
         self.assertContains(response, self.fosstodon.title)
+
+    def test_detail(self):
+        response = self.client.get(f"/bookmark/{self.homepage.pk}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.homepage.title)
+        self.assertContains(response, escape(self.homepage.note))
