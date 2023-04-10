@@ -35,4 +35,4 @@ started.
 Let's go! 🚀
 """
 
-__version__ = "23.1post1"
+__version__ = "23.2"
