@@ -66,7 +66,6 @@ class CRUDView(View):
     """
 
     role: Role
-    success_url: str
     model = None
     fields = None  # TODO: handle this being None.
 
@@ -335,19 +334,17 @@ class CRUDView(View):
         return self.render_to_response(context)
 
     def get_success_url(self):
-        success_url = getattr(self, "success_url", False)
+        assert self.model is not None, (
+            "'%s' must define 'model' or override 'get_success_url()'"
+            % self.__class__.__name__
+        )
         if self.role is Role.DELETE:
-            if not success_url:
-                msg = "No URL to redirect to. '%s' must define 'success_url'"
-                raise ImproperlyConfigured(msg % self.__class__.__name__)
-            return success_url
-        try:
-            return success_url or reverse(
+            success_url = reverse(f"{self.model._meta.model_name}-list")
+        else:
+            success_url = reverse(
                 f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
             )
-        except AttributeError:
-            msg = "No URL to redirect to. '%s' must provide 'success_url' " "or 'model'"
-            raise ImproperlyConfigured(msg % self.__class__.__name__)
+        return success_url
 
     def confirm_delete(self, request, *args, **kwargs):
         self.object = self.get_object()

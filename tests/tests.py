@@ -66,3 +66,15 @@ class BasicTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.resolver_match.url_name, "bookmark-detail")
+
+    def test_delete(self):
+        delete_url = reverse("bookmark-delete", args=[self.homepage.pk])
+
+        # Load the form.
+        response = self.client.get(delete_url)
+        self.assertEqual(response.status_code, 200)
+
+        # Submit the form.
+        response = self.client.post(delete_url, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.resolver_match.url_name, "bookmark-list")
