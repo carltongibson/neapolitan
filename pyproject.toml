@@ -9,7 +9,7 @@ readme = "README.rst"
 license = {file = "LICENSE"}
 classifiers = ["License :: OSI Approved :: MIT License"]
 dynamic = ["version", "description"]
-dependencies = ["Django"]
+dependencies = ["Django", "django-filter"]
 
 [project.urls]
 Repository = "https://github.com/carltongibson/neapolitan"

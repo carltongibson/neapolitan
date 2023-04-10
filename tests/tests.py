@@ -10,6 +10,9 @@ from .models import Bookmark
 class BookmarkView(CRUDView):
     model = Bookmark
     fields = ["url", "title", "note"]
+    filterset_fields = [
+        "favourite",
+    ]
 
 
 urlpatterns = [] + BookmarkView.get_urls()
@@ -22,6 +25,7 @@ class BasicTests(TestCase):
             url="https://noumenal.es/",
             title="Noumenal • Dr Carlton Gibson",
             note="Carlton Gibson's homepage. Blog, Contact and Project links.",
+            favourite=True,
         )
         cls.github = Bookmark.objects.create(
             url="https://github.com/carltongibson",
@@ -101,3 +105,11 @@ class BasicTests(TestCase):
             response, reverse("bookmark-detail", args=[self.homepage.pk])
         )
         self.assertContains(response, "Example")
+
+    def test_filter(self):
+        response = self.client.get("/bookmark/?favourite=true")
+        self.assertEqual(response.status_code, 200)
+        self.assertSequenceEqual([self.homepage], response.context["bookmark_list"])
+        self.assertContains(response, self.homepage.title)
+        self.assertNotContains(response, self.github.title)
+        self.assertNotContains(response, self.fosstodon.title)

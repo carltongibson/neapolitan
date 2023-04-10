@@ -11,6 +11,7 @@ from django.urls import path, reverse
 from django.utils.decorators import classonlymethod
 from django.utils.translation import gettext as _
 from django.views.generic import View
+from django_filters.filterset import filterset_factory
 
 
 # A CRUDView is a view that can perform all the CRUD operations on a model. The
@@ -93,6 +94,24 @@ class CRUDView(View):
 
     # Suffix that should be appended to automatically generated template names.
     template_name_suffix = None
+
+    # Filtering.
+
+    def get_filterset(self, queryset=None):
+        filterset_class = getattr(self, "filterset_class", None)
+        filterset_fields = getattr(self, "filterset_fields", None)
+
+        if filterset_class is None and filterset_fields:
+            filterset_class = filterset_factory(self.model, fields=filterset_fields)
+
+        if filterset_class is None:
+            return None
+
+        return filterset_class(
+            self.request.GET,
+            queryset=queryset,
+            request=self.request,
+        )
 
     # Queryset and object lookup
 
@@ -276,11 +295,14 @@ class CRUDView(View):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        paginate_by = self.get_paginate_by()
+        filterset = self.get_filterset(queryset)
+        if filterset is not None:
+            queryset = filterset.qs
 
         if not self.allow_empty and not queryset.exists():
             raise Http404
 
+        paginate_by = self.get_paginate_by()
         if paginate_by is None:
             # Unpaginated response
             self.object_list = queryset
