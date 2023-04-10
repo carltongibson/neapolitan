@@ -10,6 +10,7 @@ I have a Django model::
         url = models.URLField(unique=True)
         title = models.CharField(max_length=255)
         note = models.TextField(blank=True)
+        favourite = models.BooleanField(default=False)
 
 I want easy CRUD views for it, without it taking all day::
 
@@ -19,7 +20,9 @@ I want easy CRUD views for it, without it taking all day::
     class BookmarkView(CRUDView):
         model = Bookmark
         fields = ["url", "title", "note"]
-
+        filterset_fields = [
+            "favourite",
+        ]
 
     urlpatterns = [ ... ] + BookmarkView.get_urls()
 
@@ -34,3 +37,20 @@ Where you take your app after that is up to you. But Neapolitan will get you
 started.
 
 Let's go! 🚀
+
+Installation
+------------
+
+Install with pip::
+
+    pip install neapolitan
+
+Add ``neapolitan`` to your ``INSTALLED_APPS``::
+
+    INSTALLED_APPS = [
+        ...
+        "neapolitan",
+    ]
+
+Templates expect a `base.html` template to exist and for that to defined a
+`content` block. (Refs <https://github.com/carltongibson/neapolitan/issues/6>.)
