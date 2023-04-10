@@ -78,3 +78,26 @@ class BasicTests(TestCase):
         response = self.client.post(delete_url, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.resolver_match.url_name, "bookmark-list")
+
+    def test_update(self):
+        update_url = reverse("bookmark-update", args=[self.homepage.pk])
+
+        # Load the form.
+        response = self.client.get(update_url)
+        self.assertEqual(response.status_code, 200)
+
+        # Submit the form.
+        response = self.client.post(
+            update_url,
+            {
+                "url": "https://example.com/",
+                "title": "Example",
+                "note": "Example note",
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertRedirects(
+            response, reverse("bookmark-detail", args=[self.homepage.pk])
+        )
+        self.assertContains(response, "Example")
