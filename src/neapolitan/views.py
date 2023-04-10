@@ -335,13 +335,14 @@ class CRUDView(View):
         return self.render_to_response(context)
 
     def get_success_url(self):
+        success_url = getattr(self, "success_url", False)
         if self.role is Role.DELETE:
-            if not self.success_url:
+            if not success_url:
                 msg = "No URL to redirect to. '%s' must define 'success_url'"
                 raise ImproperlyConfigured(msg % self.__class__.__name__)
-            return self.success_url
+            return success_url
         try:
-            return self.success_url or reverse(
+            return success_url or reverse(
                 f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
             )
         except AttributeError:

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 from django.utils.html import escape
 
 from neapolitan.views import CRUDView
@@ -45,3 +46,23 @@ class BasicTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.homepage.title)
         self.assertContains(response, escape(self.homepage.note))
+
+    def test_create(self):
+        create_url = reverse("bookmark-create")
+
+        # Load the form.
+        response = self.client.get(create_url)
+        self.assertEqual(response.status_code, 200)
+
+        # Submit the form.
+        response = self.client.post(
+            create_url,
+            {
+                "url": "https://example.com/",
+                "title": "Example",
+                "note": "Example note",
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.resolver_match.url_name, "bookmark-detail")
