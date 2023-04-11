@@ -34,10 +34,13 @@ Where you take your app after that is up to you. But Neapolitan will get you
 started.
 
 Let's go! 🚀
-..
-   .. toctree::
-      :maxdepth: 2
-      :caption: Contents:
+
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Contents:
+
+    crud-view
 
 ..
    Indices and tables
