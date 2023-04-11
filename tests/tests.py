@@ -44,6 +44,9 @@ class BasicTests(TestCase):
         self.assertContains(response, self.homepage.title)
         self.assertContains(response, self.github.title)
         self.assertContains(response, self.fosstodon.title)
+        self.assertContains(
+            response, '<a href="/bookmark/new/">Add a new bookmark</a>', html=True
+        )
 
     def test_detail(self):
         response = self.client.get(f"/bookmark/{self.homepage.pk}/")

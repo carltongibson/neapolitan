@@ -5,7 +5,7 @@
 
 <h1>{{ object_verbose_name_plural|capfirst }}</h1>
 
-<a href="{% url create_view_name %}">Add a new {{ object_verbose_name }}</a>
+<a href="{{ create_view_url }}">Add a new {{ object_verbose_name }}</a>
 
 {% object_list object_list view.fields %}
 

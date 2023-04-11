@@ -236,15 +236,18 @@ class CRUDView(View):
         Takes a set of keyword arguments to use as the base context,
         and adds the following keys:
 
-        * 'view'
-        * 'object_verbose_name' and 'object_verbose_name_plural'
-        * Optionally, 'object' or 'object_list'
-        * Optionally, '{context_object_name}' or '{context_object_name}_list'
+        * ``view``: A reference to the view object itself.
+        * The ``object_verbose_name`` and ``object_verbose_name_plural`` of the
+          model.
+        * ``object`` or ``object_list``: The object or list of objects being
+          displayed, plus more user-friendly versions using the model, such as
+          ``bookmark`` or ``bookmark_list``.
+        * ``create_view_url``: The URL of the create view
         """
         kwargs["view"] = self
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
-        kwargs["create_view_name"] = f"{self.model._meta.model_name}-create"
+        kwargs["create_view_url"] = reverse(f"{self.model._meta.model_name}-create")
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object
