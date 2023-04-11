@@ -1,5 +1,5 @@
 """
-Neapolitan
+Neapolitan: quick CRUD views for Django.
 
 I have a Django model::
 

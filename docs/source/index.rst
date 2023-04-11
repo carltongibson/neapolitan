@@ -1,6 +1,7 @@
 Welcome to Neapolitan's documentation!
 ======================================
 
+Neapolitan provides quick CRUD views for Django.
 
 I have a Django model::
 
