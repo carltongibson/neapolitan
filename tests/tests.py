@@ -69,6 +69,7 @@ class BasicTests(TestCase):
         # Load the form.
         response = self.client.get(create_url)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<form method="POST" action="/bookmark/new/">')
 
         # Submit the form.
         response = self.client.post(

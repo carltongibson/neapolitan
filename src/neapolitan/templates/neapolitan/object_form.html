@@ -2,10 +2,10 @@
 
 {% block content %}
 
-<h1 style="margin: 30px">{% if object %}Edit {{object_verbose_name}}{% else %}Create {{object_verbose_name}}{% endif%}</h1>
+<h1 style="margin: 30px">{% if object %}Edit {{object_verbose_name}}{% else %}Create {{object_verbose_name}}{% endif %}</h1>
 
 <div style="margin: 30px">
-<form method="POST" action=".">
+<form method="POST" action="{% if object %}{{ update_view_url }}{% else %}{{ create_view_url }}{% endif %}">
 {% csrf_token %}
 {{ form }}
 <input type="submit" class="btn btn-primary" value="Save">
