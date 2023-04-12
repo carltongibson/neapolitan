@@ -48,6 +48,15 @@ class BasicTests(TestCase):
             response, '<a href="/bookmark/new/">Add a new bookmark</a>', html=True
         )
 
+    def test_list_empty(self):
+        Bookmark.objects.all().delete()
+        response = self.client.get("/bookmark/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "There are no bookmarks. Create one now?")
+        self.assertContains(
+            response, '<a href="/bookmark/new/">Add a new bookmark</a>', html=True
+        )
+
     def test_detail(self):
         response = self.client.get(f"/bookmark/{self.homepage.pk}/")
         self.assertEqual(response.status_code, 200)

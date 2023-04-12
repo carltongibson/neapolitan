@@ -7,7 +7,11 @@
 
 <a href="{{ create_view_url }}">Add a new {{ object_verbose_name }}</a>
 
-{% object_list object_list view.fields %}
+{% if object_list %}
+    {% object_list object_list view.fields %}
+{% else %}
+    <p>There are no {{ object_verbose_name_plural }}. Create one now?</p>
+{% endif %}
 
 <hr>
 
