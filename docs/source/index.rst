@@ -42,6 +42,7 @@ Let's go! 🚀
     :caption: Contents:
 
     crud-view
+    templates
 
 ..
    Indices and tables
