@@ -42,11 +42,13 @@ started.
 
 Let's go! 🚀
 
+Next stop `the docs <https://noumenal.es/neapolitan/>`_ 🚂
+
 Status
 ------
 
 This is alpha software. I'm still working out the details of the API, and I've
-not written the docs.
+only begun the docs.
 
 **But**: You could just read `neapolitan.views.CRUDView` and see what it does.
 Up to you. 😜
