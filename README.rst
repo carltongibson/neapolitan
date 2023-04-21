@@ -2,7 +2,9 @@
 Neapolitan
 ==========
 
-I have a Django model::
+I have a Django model:
+
+.. code:: python
 
     from django.db import models
 
@@ -12,7 +14,9 @@ I have a Django model::
         note = models.TextField(blank=True)
         favourite = models.BooleanField(default=False)
 
-I want easy CRUD views for it, without it taking all day::
+I want easy CRUD views for it, without it taking all day:
+
+.. code:: python
 
     # urls.py
     from neapolitan.views import CRUDView
@@ -50,11 +54,15 @@ Up to you. 😜
 Installation
 ------------
 
-Install with pip::
+Install with pip:
+
+.. code:: bash
 
     pip install neapolitan
 
-Add ``neapolitan`` to your ``INSTALLED_APPS``::
+Add ``neapolitan`` to your ``INSTALLED_APPS``:
+
+.. code:: python
 
     INSTALLED_APPS = [
         ...
