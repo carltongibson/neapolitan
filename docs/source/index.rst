@@ -44,6 +44,15 @@ Let's go! 🚀
     crud-view
     templates
 
+.. admonition:: Under construction 🚧
+
+    The docs are still fledging. **But** you can read
+    ``neapolitan.views.CRUDView`` to see what it does. (It's just the one
+    class!)
+
+    Whilst I'm working on it, if you wanted to make a PR adding a docstring and
+    an ``.. automethod::``… you'd be welcome to do so! 🎁
+
 What about the name?
 --------------------
 
