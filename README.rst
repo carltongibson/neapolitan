@@ -44,8 +44,11 @@ Let's go! 🚀
 
 Next stop `the docs <https://noumenal.es/neapolitan/>`_ 🚂
 
-Status
-------
+Versioning and Status
+---------------------
+
+Neapolitan uses a two-part CalVer versioning scheme, such as ``23.7``. The first
+number is the year. The second is the release number within that year.
 
 This is alpha software. I'm still working out the details of the API, and I've
 only begun the docs.
