@@ -44,6 +44,17 @@ Let's go! 🚀
     crud-view
     templates
 
+What about the name?
+--------------------
+
+It's homage to Tom Christie's
+`django-vanilla-views <http://django-vanilla-views.org>`_ which long-ago showed
+the way to sanity in regards to class-based views. 🥰 I needed just a little bit
+more — filtering, generic templates, auto-routing of multiple views, and that's
+about it really — but what's that little bit more than Vanilla?
+`Neapolitan <https://en.wikipedia.org/wiki/Neapolitan_ice_cream>`_! 🍨
+
+
 ..
    Indices and tables
    ==================
