@@ -50,7 +50,7 @@ Status
 This is alpha software. I'm still working out the details of the API, and I've
 only begun the docs.
 
-**But**: You could just read `neapolitan.views.CRUDView` and see what it does.
+**But**: You could just read ``neapolitan.views.CRUDView`` and see what it does.
 Up to you. 😜
 
 Installation
