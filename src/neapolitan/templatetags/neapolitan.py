@@ -18,6 +18,17 @@ def action_links(object):
 
 @register.inclusion_tag("neapolitan/partial/detail.html")
 def object_detail(object, fields):
+    """
+    Renders a detail view of an object with the given fields.
+
+    Inclusion tag usage::
+
+        {% object_detail object fields %}
+
+    Template: ``neapolitan/partial/detail.html`` - Will render a table of the
+    object's fields.
+    """
+
     def iter():
         for f in fields:
             mf = object._meta.get_field(f)
@@ -28,6 +39,17 @@ def object_detail(object, fields):
 
 @register.inclusion_tag("neapolitan/partial/list.html")
 def object_list(objects, fields):
+    """
+    Renders a list of objects with the given fields.
+
+    Inclusion tag usage::
+
+        {% object_list objects fields %}
+
+    Template: ``neapolitan/partial/list.html`` — Will render a table of objects
+    with links to view, edit, and delete views.
+    """
+
     headers = [objects[0]._meta.get_field(f).verbose_name for f in fields]
     object_list = [
         {
