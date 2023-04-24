@@ -7,10 +7,13 @@ register = template.Library()
 
 def action_links(object):
     model_name = object._meta.model_name
-    edit_url = reverse(f"{model_name}-update", kwargs={"pk": object.pk})
-    delete_url = reverse(f"{model_name}-delete", kwargs={"pk": object.pk})
-    links = f"""<a href="{edit_url}">Edit</a> | <a href="{delete_url}">Delete</a>"""
-    return mark_safe(links)
+    actions = [
+        (reverse(f"{model_name}-detail", kwargs={"pk": object.pk}), "View"),
+        (reverse(f"{model_name}-update", kwargs={"pk": object.pk}), "Edit"),
+        (reverse(f"{model_name}-delete", kwargs={"pk": object.pk}), "Delete"),
+    ]
+    links = [f"<a href='{url}'>{anchor_text}</a>" for url, anchor_text in actions]
+    return mark_safe(" | ".join(links))
 
 
 @register.inclusion_tag("neapolitan/partial/detail.html")
