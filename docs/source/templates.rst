@@ -6,9 +6,8 @@ Neapolitan provides generic templates that can be used as a starting point for
 your project.
 
 The default templates use TailwindCSS classes, for styling. See the `guide here
-for integrating TailwindCSS with Django <TwD>`_.
-
-.. _TwD : https://noumenal.es/notes/tailwind/django-integration/
+for integrating TailwindCSS with Django
+<https://noumenal.es/notes/tailwind/django-integration/>`_.
 
 The templates ``{% extends "base.html" %}``, which must provide
 ``{% block content %}``. Neapolitan may provide a base template in the future,

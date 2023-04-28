@@ -17,9 +17,8 @@ here:
 ====
 
 Adds the beginnings of some TailwindCSS styling to the provided templates. See
-the `guide here for integrating TailwindCSS with Django <TwD>`_.
-
-.. _TwD : https://noumenal.es/notes/tailwind/django-integration/
+the `guide here for integrating TailwindCSS with Django
+<https://noumenal.es/notes/tailwind/django-integration/>`_.
 
 * These are merely CSS classes, so you can ignore them, or override the
   templates if you're not using Tailwind.
