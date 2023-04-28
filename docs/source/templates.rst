@@ -5,6 +5,38 @@ Neapolitan's Templates
 Neapolitan provides generic templates that can be used as a starting point for
 your project.
 
+The default templates use TailwindCSS classes, for styling. See the `guide here
+for integrating TailwindCSS with Django <TwD>`_.
+
+.. _TwD : https://noumenal.es/notes/tailwind/django-integration/
+
+The templates ``{% extends "base.html" %}``, which must provide
+``{% block content %}``. Neapolitan may provide a base template in the future,
+see `issue #6 <https://github.com/carltongibson/neapolitan/issues/6>`_.
+
+This is the full listing of the provided templates:
+
+.. code-block:: shell
+
+    templates
+    └── neapolitan
+        ├── object_confirm_delete.html
+        ├── object_detail.html
+        ├── object_form.html
+        ├── object_list.html
+        └── partial
+            ├── detail.html
+            └── list.html
+
+You can override these templates by creating your own, either individually or as
+a whole.
+
+.. admonition:: Under construction 🚧
+
+    The templates are still being developed. If a change in a release affects
+    you, you can copy the templates from the previous version to continue, but
+    please also an open an issue to discuss.
+
 
 ``object_form.html``
 =====================
