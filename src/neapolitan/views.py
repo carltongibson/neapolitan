@@ -447,6 +447,15 @@ class CRUDView(View):
     @classonlymethod
     def get_urls(cls):
         verbose_name = cls.model._meta.model_name
+
+        pk_converter_str = "<int:pk>"
+        pk_field_type = cls.model._meta.pk.get_internal_type()
+        match pk_field_type:
+            case "CharField" | "TextField":
+                pk_converter_str = "<str:pk>"
+            case "UUIDField":
+                pk_converter_str = "<uuid:pk>"
+
         urlpatterns = [
             path(
                 f"{verbose_name}/",
@@ -464,17 +473,17 @@ class CRUDView(View):
             # It's just a string that gets passed to path(). SO an extra view
             # field with the name of a registered converter.
             path(
-                f"{verbose_name}/<int:pk>/",
+                f"{verbose_name}/{pk_converter_str}/",
                 cls.as_view(role=Role.DETAIL),
                 name=f"{verbose_name}-detail",
             ),
             path(
-                f"{verbose_name}/<int:pk>/edit/",
+                f"{verbose_name}/{pk_converter_str}/edit/",
                 cls.as_view(role=Role.UPDATE),
                 name=f"{verbose_name}-update",
             ),
             path(
-                f"{verbose_name}/<int:pk>/delete/",
+                f"{verbose_name}/{pk_converter_str}/delete/",
                 cls.as_view(role=Role.DELETE),
                 name=f"{verbose_name}-delete",
             ),
