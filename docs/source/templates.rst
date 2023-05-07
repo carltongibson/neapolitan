@@ -27,6 +27,9 @@ This is the full listing of the provided templates:
             ├── detail.html
             └── list.html
 
+Templates
+=========
+
 You can override these templates by creating your own, either individually or as
 a whole.
 
@@ -38,7 +41,7 @@ a whole.
 
 
 ``object_form.html``
-=====================
+--------------------
 
 Used for both the create and update views.
 
@@ -47,10 +50,24 @@ Used for both the create and update views.
 Context variables:
 
 * ``object``: the object being updated, if present.
-* ``form``: the form.
 * ``object_verbose_name``: the verbose name of the object, e.g. ``bookmark``.
+* ``form``: the form.
 * ``create_view_url``: the URL for the create view.
 * ``update_view_url``: the URL for the update view.
+
+``object_confirm_delete.html``
+------------------------------
+
+Used for the delete view.
+
+``neapolitan/object_confirm_delete.html``
+
+Context variables:
+
+* ``object``: the object being deleted.
+* ``object_verbose_name``: the verbose name of the object, e.g. ``bookmark``.
+* ``form``: the form.
+* ``delete_view_url``: the URL for the delete view.
 
 
 Template tags
