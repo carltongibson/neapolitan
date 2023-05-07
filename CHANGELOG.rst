@@ -13,6 +13,13 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+23.10
+=====
+
+* Added a ``{{ delete_view_url}}`` context variable for the form action to the
+  ``object_confirm_delete.html`` template.
+* Added basic styling and docs for the ``object_confirm_delete.html`` template.
+
 23.9
 ====
 
