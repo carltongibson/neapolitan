@@ -5,13 +5,12 @@
 <h1>{% if object %}Edit {{object_verbose_name}}{% else %}Create {{object_verbose_name}}{% endif %}</h1>
 
 <div>
-  <form method="POST" action="{% if object %}{{ update_view_url }}{% else %}{{ create_view_url }}{% endif %}"
-        class="dl-form">
-  {% csrf_token %}
-  {{ form }}
-  <button type="submit"
-          class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >Save</button>
+  <form method="POST" {% if form.is_multipart %}enctype="multipart/form-data" {% endif %}
+    action="{% if object %}{{ update_view_url }}{% else %}{{ create_view_url }}{% endif %}" class="dl-form">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit"
+      class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
   </form>
 </div>
 {% endblock %}
