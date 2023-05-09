@@ -13,6 +13,11 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+23.11
+=====
+
+* Adjusted object form template for multipart forms.
+
 23.10
 =====
 
