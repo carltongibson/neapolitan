@@ -1,7 +1,34 @@
-Welcome to Neapolitan's documentation!
+Neapolitan
 ======================================
 
-Neapolitan provides quick CRUD views for Django.
+Neapolitan is a re-usable library for Django projects, that provides quick CRUD views
+for other applications.
+
+It helps you get your models into your web output as quickly as possible, and includes base
+templates and re-usable template tags.
+
+All kinds of applications need frontend CRUD functionality - but it's not available out of
+the box with Django, and Python programmers often suffer while wrestling with the unfamiliar
+technologies and tools required to implement it. Neapolitan addresses that particular
+headache.
+
+If you've ever looked longingly at Django's admin functionality and wished you could have
+the same kind of CRUD access that it provides for your frontend, then Neapolitan is for you.
+
+
+Contents
+--------
+
+.. toctree::
+    :maxdepth: 1
+
+    tutorial
+    crud-view
+    templates
+
+
+A quick look
+------------
 
 I have a Django model::
 
@@ -24,34 +51,21 @@ I want easy CRUD views for it, without it taking all day::
 
     urlpatterns = [ ... ] + BookmarkView.get_urls()
 
-Neapolitan's ``CRUDView`` provides the standard list, detail,
-create, edit, and delete views for a model, as well as the hooks you need to
-be able to customise any part of that.
-
-Neapolitan provides base templates and re-usable template tags to make getting
-your model on the page as easy as possible.
-
-Where you take your app after that is up to you. But Neapolitan will get you
-started.
-
-Let's go! 🚀
+Read the :ref:`tutorial` for a step-by-step guide to getting it up and running. Let's go! 🚀
 
 
-.. toctree::
-    :maxdepth: 1
-    :caption: Contents:
+Contribute!
+-----------
 
-    crud-view
-    templates
+Neapolitan is very much under construction 🚧.
 
-.. admonition:: Under construction 🚧
+The docs are still fledging. **But** you can read
+``neapolitan.views.CRUDView`` to see what it does. (It's just the one
+class!)
 
-    The docs are still fledging. **But** you can read
-    ``neapolitan.views.CRUDView`` to see what it does. (It's just the one
-    class!)
+Whilst I'm working on it, if you wanted to make a PR adding a docstring and
+an ``.. automethod::``… you'd be welcome to do so! 🎁
 
-    Whilst I'm working on it, if you wanted to make a PR adding a docstring and
-    an ``.. automethod::``… you'd be welcome to do so! 🎁
 
 What about the name?
 --------------------
@@ -62,12 +76,3 @@ the way to sanity in regards to class-based views. 🥰 I needed just a little b
 more — filtering, generic templates, auto-routing of multiple views, and that's
 about it really — but what's that little bit more than Vanilla?
 `Neapolitan <https://en.wikipedia.org/wiki/Neapolitan_ice_cream>`_! 🍨
-
-
-..
-   Indices and tables
-   ==================
-
-   * :ref:`genindex`
-   * :ref:`modindex`
-   * :ref:`search`
