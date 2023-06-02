@@ -115,7 +115,7 @@ And at the end of ``dashboard/urls.py``::
 
     class ProjectView(CRUDView):
         model = projects.models.Project
-        fields = ["name", "owner", "has_tests", "has_docs", "status"]
+        fields = ["name", "owner", "last_review", "has_tests", "has_docs", "status"]
 
     urlpatterns += ProjectView.get_urls()
 
