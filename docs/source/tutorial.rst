@@ -232,7 +232,7 @@ You'll need to edit ``tailwind.config.js``, adding::
     }
     // console.log(module.exports)
 
-.. important:: You need to delete the origin ``module.exports`` dictionary.
+.. important:: You need to delete the original ``module.exports`` dictionary.
 
 
 
