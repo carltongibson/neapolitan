@@ -76,7 +76,6 @@ Then add the project, the ``projects`` module and Neapolitan to the beginning of
     INSTALLED_APPS = [
         'projects',
         'neapolitan',
-        'dashboard',
         [...]
     ]
 
