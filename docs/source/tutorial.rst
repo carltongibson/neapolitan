@@ -63,7 +63,7 @@ In ``projects/models.py``, define a ``Project``::
             return self.status in {self.BLOCKED, self.INACTIVE}
 
         def __str__(self):
-            return self.question_text
+            return self.name
 
 
 
