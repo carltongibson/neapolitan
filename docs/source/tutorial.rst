@@ -52,7 +52,7 @@ In ``projects/models.py``, define a ``Project``::
             (INACTIVE, "Inactive"),
         ]
 
-        staus = models.CharField(
+        status = models.CharField(
             max_length=2,
             choices=STATUS_CHOICES,
         )
