@@ -1,6 +1,6 @@
-======================
+==================
 Template reference
-======================
+==================
 
 Neapolitan provides generic templates that can be used as a starting point for
 your project.

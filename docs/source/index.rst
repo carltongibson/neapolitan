@@ -1,5 +1,5 @@
 Neapolitan
-======================================
+==========
 
 Neapolitan is a re-usable library for Django projects, that provides quick CRUD views
 for other applications.
