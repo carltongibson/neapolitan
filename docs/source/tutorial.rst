@@ -52,7 +52,7 @@ In ``projects/models.py``, define a ``Project``::
             (INACTIVE, "Inactive"),
         ]
 
-        staus = models.CharField(
+        status = models.CharField(
             max_length=2,
             choices=STATUS_CHOICES,
         )
@@ -63,7 +63,7 @@ In ``projects/models.py``, define a ``Project``::
             return self.status in {self.BLOCKED, self.INACTIVE}
 
         def __str__(self):
-            return self.question_text
+            return self.name
 
 
 
@@ -76,7 +76,6 @@ Then add the project, the ``projects`` module and Neapolitan to the beginning of
     INSTALLED_APPS = [
         'projects',
         'neapolitan',
-        'dashboard',
         [...]
     ]
 
