@@ -76,3 +76,15 @@ the way to sanity in regards to class-based views. 🥰 I needed just a little b
 more — filtering, generic templates, auto-routing of multiple views, and that's
 about it really — but what's that little bit more than Vanilla?
 `Neapolitan <https://en.wikipedia.org/wiki/Neapolitan_ice_cream>`_! 🍨
+
+A quick introductory talk
+-------------------------
+
+My DjangoCon Europe talk from 2023 was about Neapolitan, and how it came to be. It gives a quick introduction, and some of the thinking behind it.
+
+You might want to watch that. 🍿
+
+.. raw:: html
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/_3oGI4RC52s" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
