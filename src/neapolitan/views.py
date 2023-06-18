@@ -13,6 +13,8 @@ from django.utils.translation import gettext as _
 from django.views.generic import View
 from django_filters.filterset import filterset_factory
 
+from neapolitan.utils import get_settings
+
 
 # A CRUDView is a view that can perform all the CRUD operations on a model. The
 # `role` attribute determines which operations are available for a given
@@ -248,6 +250,7 @@ class CRUDView(View):
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
         kwargs["create_view_url"] = reverse(f"{self.model._meta.model_name}-create")
+        kwargs["base_template"] = self.get_base_template_name()
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object
@@ -262,6 +265,15 @@ class CRUDView(View):
                 kwargs[context_object_name] = self.object_list
 
         return kwargs
+
+    def get_base_template_name(self):
+        """
+        Get base html page name.
+
+        Looks at settings and if not defined return base.html as default.
+        """
+        settings = get_settings()
+        return settings.get("BASE_TEMPLATE", "base.html")
 
     def get_template_names(self):
         """

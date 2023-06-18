@@ -13,6 +13,15 @@ The templates ``{% extends "base.html" %}``, which must provide
 ``{% block content %}``. Neapolitan may provide a base template in the future,
 see `issue #6 <https://github.com/carltongibson/neapolitan/issues/6>`_.
 
+You can change the base html template that neapolitan looks for by setting the
+``BASE_TEMPLATE`` in Neapolitan setting.
+
+.. code-block:: html+django
+
+    NEAPOLITAN = {
+        "BASE_TEMPLATE": "dashboard_base.html",
+    }
+
 This is the full listing of the provided templates:
 
 .. code-block:: shell
