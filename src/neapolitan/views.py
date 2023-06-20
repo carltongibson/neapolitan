@@ -64,6 +64,10 @@ class CRUDView(View):
     CRUDView is Neapolitan's core. It provides the standard list, detail,
     create, edit, and delete views for a model, as well as the hooks you need to
     be able to customise any part of that.
+
+    Following attributes can be overridden by defining in extending view classes or by passing to as_view():
+
+    * base_template: Base template that Neapolitan extends from. If not defined defaults to ``base.html``.
     """
 
     role: Role
@@ -94,6 +98,8 @@ class CRUDView(View):
 
     # Suffix that should be appended to automatically generated template names.
     template_name_suffix = None
+
+    base_template = "base.html"
 
     # Filtering.
 
@@ -248,6 +254,7 @@ class CRUDView(View):
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
         kwargs["create_view_url"] = reverse(f"{self.model._meta.model_name}-create")
+        kwargs["base_template"] = self.base_template
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object

@@ -4,7 +4,7 @@ from django.utils.html import escape
 
 from neapolitan.views import CRUDView
 
-from .models import Bookmark
+from .models import Bookmark, Project
 
 
 class BookmarkView(CRUDView):
@@ -15,7 +15,13 @@ class BookmarkView(CRUDView):
     ]
 
 
-urlpatterns = [] + BookmarkView.get_urls()
+class ProjectView(CRUDView):
+    model = Project
+    fields = ["name"]
+    base_template = "custom_base.html"
+
+
+urlpatterns = [] + BookmarkView.get_urls() + ProjectView.get_urls()
 
 
 class BasicTests(TestCase):
@@ -122,3 +128,9 @@ class BasicTests(TestCase):
         self.assertContains(response, self.homepage.title)
         self.assertNotContains(response, self.github.title)
         self.assertNotContains(response, self.fosstodon.title)
+
+    def test_custom_base_template(self):
+        """Test that base template can be customized per view"""
+        response = self.client.get("/project/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "<title>Custom Base Template</title>")

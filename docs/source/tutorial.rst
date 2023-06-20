@@ -100,8 +100,9 @@ Finally, start the runserver and in the admin, add a few ``Project`` objects to 
 Wire up Neapolitan views
 ------------------------
 
-Neapolitan expects to extend a base template (its own templates use
-``{% extends "base.html" %}`` so you'll have to provide one at ``dashboard/templates/base.html``::
+Neapolitan expects to extend a base template called ``base.html``.
+So you'll have to provide one at ``dashboard/templates/base.html`` or override the base template by defining a class attribute called ``base_template`` in your view classes.
+The base template needs to have a block called ``content``::
 
     {% block content %}{% endblock %}
 

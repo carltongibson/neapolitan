@@ -3,3 +3,4 @@ docs/build
 neapolitan.code-workspace
 .coverage
 dist
+.DS_Store
