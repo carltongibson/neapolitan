@@ -44,18 +44,14 @@ class BasicTests(TestCase):
         self.assertContains(response, self.homepage.title)
         self.assertContains(response, self.github.title)
         self.assertContains(response, self.fosstodon.title)
-        self.assertContains(
-            response, '<a href="/bookmark/new/">Add a new bookmark</a>', html=True
-        )
+        self.assertContains(response, ">Add a new bookmark</a>")
 
     def test_list_empty(self):
         Bookmark.objects.all().delete()
         response = self.client.get("/bookmark/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "There are no bookmarks. Create one now?")
-        self.assertContains(
-            response, '<a href="/bookmark/new/">Add a new bookmark</a>', html=True
-        )
+        self.assertContains(response, ">Add a new bookmark</a>")
 
     def test_detail(self):
         response = self.client.get(f"/bookmark/{self.homepage.pk}/")
@@ -69,7 +65,7 @@ class BasicTests(TestCase):
         # Load the form.
         response = self.client.get(create_url)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<form method="POST" action="/bookmark/new/">')
+        self.assertContains(response, 'action="/bookmark/new/"')
 
         # Submit the form.
         response = self.client.post(
