@@ -72,10 +72,12 @@ class CRUDView(View):
 
     # Object lookup parameters. These are used in the URL kwargs, and when
     # performing the model instance lookup.
-    # Note that if unset then `lookup_url_kwarg` defaults to using the same
-    # value as `lookup_field`.
     lookup_field = "pk"
-    lookup_url_kwarg = None
+    lookup_url_converter = "int"
+
+    # Configure the view URL. If not defined default to model name.
+    mount_url = None
+
     object: models.Model = None
 
     # All the following are optional, and fall back to default values
@@ -120,14 +122,13 @@ class CRUDView(View):
         Returns the object the view is displaying.
         """
         queryset = self.get_queryset()
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         try:
-            lookup = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+            lookup = {self.lookup_field: self.kwargs[self.lookup_field]}
         except KeyError:
             msg = "Lookup field '%s' was not provided in view kwargs to '%s'"
             raise ImproperlyConfigured(
-                msg % (lookup_url_kwarg, self.__class__.__name__)
+                msg % (self.lookup_field, self.__class__.__name__)
             )
 
         return get_object_or_404(queryset, **lookup)
@@ -363,11 +364,16 @@ class CRUDView(View):
             "'%s' must define 'model' or override 'get_success_url()'"
             % self.__class__.__name__
         )
+        try:
+            lookup_value = getattr(self.object, self.lookup_field)
+        except AttributeError:
+            raise ImproperlyConfigured(f"Lookup field {self.lookup_field} doesn't exist on object")
+
         if self.role is Role.DELETE:
             success_url = reverse(f"{self.model._meta.model_name}-list")
         else:
             success_url = reverse(
-                f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
+                f"{self.model._meta.model_name}-detail", kwargs={self.lookup_field: lookup_value}
             )
         return success_url
 
@@ -447,34 +453,30 @@ class CRUDView(View):
     @classonlymethod
     def get_urls(cls):
         verbose_name = cls.model._meta.model_name
+        mount_url = cls.mount_url or verbose_name
         urlpatterns = [
             path(
-                f"{verbose_name}/",
+                f"{mount_url}/",
                 cls.as_view(role=Role.LIST),
                 name=f"{verbose_name}-list",
             ),
             path(
-                f"{verbose_name}/new/",
+                f"{mount_url}/new/",
                 cls.as_view(role=Role.CREATE),
                 name=f"{verbose_name}-create",
             ),
-            # TODO: make the lookup field configurable. Determined by
-            # lookup_field and lookup_url_kwarg. ???: how to handle the type of
-            # the converter? (int, slug, etc.)
-            # It's just a string that gets passed to path(). SO an extra view
-            # field with the name of a registered converter.
             path(
-                f"{verbose_name}/<int:pk>/",
+                f"{mount_url}/<{cls.lookup_url_converter}:{cls.lookup_field}>/",
                 cls.as_view(role=Role.DETAIL),
                 name=f"{verbose_name}-detail",
             ),
             path(
-                f"{verbose_name}/<int:pk>/edit/",
+                f"{mount_url}/<{cls.lookup_url_converter}:{cls.lookup_field}>/edit/",
                 cls.as_view(role=Role.UPDATE),
                 name=f"{verbose_name}-update",
             ),
             path(
-                f"{verbose_name}/<int:pk>/delete/",
+                f"{mount_url}/<{cls.lookup_url_converter}:{cls.lookup_field}>/delete/",
                 cls.as_view(role=Role.DELETE),
                 name=f"{verbose_name}-delete",
             ),
