@@ -2,6 +2,10 @@
 Neapolitan
 ==========
 
+.. image:: https://img.shields.io/pypi/v/neapolitan.svg
+  :target: https://pypi.org/project/neapolitan/
+  :alt: PyPI version
+
 I have a Django model:
 
 .. code:: python
