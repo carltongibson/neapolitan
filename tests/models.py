@@ -6,3 +6,7 @@ class Bookmark(models.Model):
     title = models.CharField(max_length=255)
     note = models.TextField(blank=True)
     favourite = models.BooleanField(default=False)
+
+
+class Project(models.Model):
+    name = models.CharField(max_length=25)
