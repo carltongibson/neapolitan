@@ -3,3 +3,5 @@ docs/build
 neapolitan.code-workspace
 .coverage
 dist
+.idea
+
