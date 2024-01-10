@@ -76,7 +76,7 @@ class CRUDView(View):
     # value as `lookup_field`.
     lookup_field = "pk"
     lookup_url_kwarg = None
-    object: models.Model = None
+    object = None
 
     # All the following are optional, and fall back to default values
     # based on the 'model' shortcut.
