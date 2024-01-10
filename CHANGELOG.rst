@@ -13,6 +13,11 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.1
+====
+
+* Fixed an incorrect type annotation, that led to incorrect IDE warnings.
+
 23.11
 =====
 
