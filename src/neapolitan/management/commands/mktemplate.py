@@ -89,6 +89,9 @@ class Command(BaseCommand):
 
             # Find target directory.
             # TODO: allow different target directories, via template finders.
+            # Rule here should be:
+            # 1. If  f"{app_name}/templates" exists, use that.
+            # 2. Otherwise use first project level templates dir.
             target_dir = f"{app_name}/templates"
             # Copy the neapolitan template to the target directory with template_name.
             shutil.copyfile(neapolitan_template_path, f"{target_dir}/{template_name}")
