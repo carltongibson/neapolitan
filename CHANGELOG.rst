@@ -13,6 +13,14 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.2
+====
+
+* Added the ``mktemplate`` management command to create an override template from the
+  the active default templates for the specified model and CRUD action.
+
+  See ``./manage.py mktemplate --help`` for full details.
+
 24.1
 ====
 
