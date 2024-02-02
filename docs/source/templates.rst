@@ -47,7 +47,7 @@ name applied.
 
 For example, the above command will copy the active ``neapoltian/object_list.html`` template to your app's
 ``templates/myapp/mymodel_list.html``, where it will be picked up by a ``CRUDView`` for
-``MyModel`` when serving the list view. 
+``MyModel`` when serving the list view.
 
 See ``python manage.py mktemplate --help`` for full details.
 
