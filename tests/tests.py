@@ -1,7 +1,9 @@
+import os
+
+from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.html import escape
-
 from neapolitan.views import CRUDView
 
 from .models import Bookmark
@@ -122,3 +124,16 @@ class BasicTests(TestCase):
         self.assertContains(response, self.homepage.title)
         self.assertNotContains(response, self.github.title)
         self.assertNotContains(response, self.fosstodon.title)
+
+
+class MktemplateCommandTest(TestCase):
+    def test_mktemplate_command(self):
+        # Run the command
+        call_command('mktemplate', 'tests.Bookmark', '--list')
+
+        # Check if the file was created
+        file_path = 'tests/templates/tests/bookmark_list.html'
+        self.assertTrue(os.path.isfile(file_path))
+
+        # Remove the created file
+        os.remove(file_path)

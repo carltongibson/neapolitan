@@ -33,6 +33,25 @@ Templates
 You can override these templates by creating your own, either individually or as
 a whole.
 
+If you want to override a single template for your model, you can run the ``mktemplate``
+management command:
+
+.. code-block:: shell
+
+    python manage.py mktemplate myapp.MyModel --list
+
+You pass your model in the ``app_name.ModelName`` format, and then an option for the
+CRUD template you want to override. The specified template will be copied to your app's
+``templates``, using your active neapolitan default templates, and having the correct
+name applied.
+
+For example, the above command will copy the active ``neapoltian/object_list.html`` template to your app's
+``templates/myapp/mymodel_list.html``, where it will be picked up by a ``CRUDView`` for
+``MyModel`` when serving the list view.
+
+See ``python manage.py mktemplate --help`` for full details.
+
+
 .. admonition:: Under construction 🚧
 
     The templates are still being developed. If a change in a release affects
