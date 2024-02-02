@@ -45,9 +45,9 @@ CRUD template you want to override. The specified template will be copied to you
 ``templates``, using your active neapolitan default templates, and having the correct
 name applied.
 
-For example, the above command will copy the ``object_list.html`` template to your app's
+For example, the above command will copy the active ``neapoltian/object_list.html`` template to your app's
 ``templates/myapp/mymodel_list.html``, where it will be picked up by a ``CRUDView`` for
-``MyModel``.
+``MyModel`` when serving the list view. 
 
 See ``python manage.py mktemplate --help`` for full details.
 
