@@ -20,20 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
         django-version: ["4.2", "5.0", "main"]
-        exclude:
-          # https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django
-          # main requires python 3.10+
-          - django-version: "main"
-            python-version: "3.8"
-          - django-version: "main"
-            python-version: "3.9"
-          # 5.0 requires python 3.10+
-          - django-version: "5.0"
-            python-version: "3.8"
-          - django-version: "5.0"
-            python-version: "3.9"
     steps:
       - uses: actions/checkout@v4
 
@@ -75,7 +63,7 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     env:
-      PYTHON_MIN_VERSION: "3.8"
+      PYTHON_MIN_VERSION: "3.10"
       DJANGO_MIN_VERSION: "4.2"
     steps:
       - uses: actions/checkout@v4
