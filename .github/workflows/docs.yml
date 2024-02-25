@@ -33,7 +33,7 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - run: python -m pip install -e . [docs]
+      - run: python -m pip install -e .[docs]
 
       - name: Build docs
         run: |
