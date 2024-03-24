@@ -9,7 +9,7 @@ CRUDView Reference
 Request Handlers
 ================
 
-The core of a class-based view are the request handlers — methods that convert an HTTP request into a response. The request handers are the essence of the **view**.
+The core of a class-based view are the request handlers — methods that convert an HTTP request into an HTTP response. The request handlers are the essence of the **Django view**.
 
 Neapolitan's ``CRUDView`` provides handlers the standard list, detail, create, edit, and delete views for a model.
 
