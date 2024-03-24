@@ -13,6 +13,20 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.3
+====
+
+* Added the used ``filterset`` to list-view context.
+
+* Added CI testing for supported Python and Django versions. (Python 3.10
+  onwards; Django 4.2 onwards, including the development branch.)
+
+  Thanks to Josh Thomas.
+
+* Added CI build for the documentation.
+
+  Thanks to Eduardo Enriquez
+
 24.2
 ====
 
