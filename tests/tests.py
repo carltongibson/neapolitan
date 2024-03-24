@@ -43,6 +43,7 @@ class BasicTests(TestCase):
     def test_list(self):
         response = self.client.get("/bookmark/")
         self.assertEqual(response.status_code, 200)
+        self.assertIn("filterset", response.context)
         self.assertContains(response, self.homepage.title)
         self.assertContains(response, self.github.title)
         self.assertContains(response, self.fosstodon.title)
