@@ -95,6 +95,82 @@ class CRUDView(View):
     # Suffix that should be appended to automatically generated template names.
     template_name_suffix = None
 
+    def list(self, request, *args, **kwargs):
+        """GET handler for the list view."""
+
+        queryset = self.get_queryset()
+        filterset = self.get_filterset(queryset)
+        if filterset is not None:
+            queryset = filterset.qs
+
+        if not self.allow_empty and not queryset.exists():
+            raise Http404
+
+        paginate_by = self.get_paginate_by()
+        if paginate_by is None:
+            # Unpaginated response
+            self.object_list = queryset
+            context = self.get_context_data(
+                page_obj=None,
+                is_paginated=False,
+                paginator=None,
+            )
+        else:
+            # Paginated response
+            page = self.paginate_queryset(queryset, paginate_by)
+            self.object_list = page.object_list
+            context = self.get_context_data(
+                page_obj=page,
+                is_paginated=page.has_other_pages(),
+                paginator=page.paginator,
+            )
+
+        return self.render_to_response(context)
+
+    def detail(self, request, *args, **kwargs):
+        """GET handler for the detail view."""
+
+        self.object = self.get_object()
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def show_form(self, request, *args, **kwargs):
+        """GET handler for the create and update form views."""
+
+        if self.role is Role.UPDATE:
+            self.object = self.get_object()
+        form = self.get_form(instance=self.object)
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
+
+    def process_form(self, request, *args, **kwargs):
+        """POST handler for the create and update form views."""
+
+        if self.role is Role.UPDATE:
+            self.object = self.get_object()
+        form = self.get_form(
+            data=request.POST,
+            files=request.FILES,
+            instance=self.object,
+        )
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def confirm_delete(self, request, *args, **kwargs):
+        """GET handler for the delete confirmation view."""
+
+        self.object = self.get_object()
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def process_deletion(self, request, *args, **kwargs):
+        """POST handler for the delete confirmation view."""
+
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
     # Filtering.
 
     def get_filterset(self, queryset=None):
@@ -282,68 +358,6 @@ class CRUDView(View):
             request=self.request, template=self.get_template_names(), context=context
         )
 
-    def list(self, request, *args, **kwargs):
-        """GET handler for the list view."""
-
-        queryset = self.get_queryset()
-        filterset = self.get_filterset(queryset)
-        if filterset is not None:
-            queryset = filterset.qs
-
-        if not self.allow_empty and not queryset.exists():
-            raise Http404
-
-        paginate_by = self.get_paginate_by()
-        if paginate_by is None:
-            # Unpaginated response
-            self.object_list = queryset
-            context = self.get_context_data(
-                page_obj=None,
-                is_paginated=False,
-                paginator=None,
-            )
-        else:
-            # Paginated response
-            page = self.paginate_queryset(queryset, paginate_by)
-            self.object_list = page.object_list
-            context = self.get_context_data(
-                page_obj=page,
-                is_paginated=page.has_other_pages(),
-                paginator=page.paginator,
-            )
-
-        return self.render_to_response(context)
-
-    def detail(self, request, *args, **kwargs):
-        """GET handler for the detail view."""
-
-        self.object = self.get_object()
-        context = self.get_context_data()
-        return self.render_to_response(context)
-
-    def show_form(self, request, *args, **kwargs):
-        """GET handler for the create and update form views."""
-
-        if self.role is Role.UPDATE:
-            self.object = self.get_object()
-        form = self.get_form(instance=self.object)
-        context = self.get_context_data(form=form)
-        return self.render_to_response(context)
-
-    def process_form(self, request, *args, **kwargs):
-        """POST handler for the create and update form views."""
-
-        if self.role is Role.UPDATE:
-            self.object = self.get_object()
-        form = self.get_form(
-            data=request.POST,
-            files=request.FILES,
-            instance=self.object,
-        )
-        if form.is_valid():
-            return self.form_valid(form)
-        return self.form_invalid(form)
-
     def form_valid(self, form):
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -364,20 +378,6 @@ class CRUDView(View):
                 f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
             )
         return success_url
-
-    def confirm_delete(self, request, *args, **kwargs):
-        """GET handler for the delete confirmation view."""
-
-        self.object = self.get_object()
-        context = self.get_context_data()
-        return self.render_to_response(context)
-
-    def process_deletion(self, request, *args, **kwargs):
-        """POST handler for the delete confirmation view."""
-
-        self.object = self.get_object()
-        self.object.delete()
-        return HttpResponseRedirect(self.get_success_url())
 
     @classonlymethod
     def as_view(cls, role: Role, **initkwargs):
