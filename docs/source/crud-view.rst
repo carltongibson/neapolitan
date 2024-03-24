@@ -140,3 +140,8 @@ Response rendering
 
     .. literalinclude:: ../../src/neapolitan/views.py
         :pyobject: CRUDView.render_to_response
+
+URLs and view callables
+=======================
+
+.. automethod:: CRUDView.get_urls

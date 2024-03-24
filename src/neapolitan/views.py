@@ -377,6 +377,8 @@ class CRUDView(View):
             request=self.request, template=self.get_template_names(), context=context
         )
 
+    # URLs and view callables
+
     @classonlymethod
     def as_view(cls, role: Role, **initkwargs):
         """Main entry point for a request-response process."""
@@ -442,6 +444,8 @@ class CRUDView(View):
 
     @classonlymethod
     def get_urls(cls):
+        """Classmethod to generate URL patterns for the view."""
+
         verbose_name = cls.model._meta.model_name
         urlpatterns = [
             path(
