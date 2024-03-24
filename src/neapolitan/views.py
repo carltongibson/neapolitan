@@ -230,20 +230,6 @@ class CRUDView(View):
         return None
 
     def get_context_data(self, **kwargs):
-        """
-        Returns a dictionary to use as the context of the response.
-
-        Takes a set of keyword arguments to use as the base context,
-        and adds the following keys:
-
-        * ``view``: A reference to the view object itself.
-        * The ``object_verbose_name`` and ``object_verbose_name_plural`` of the
-          model.
-        * ``object`` or ``object_list``: The object or list of objects being
-          displayed, plus more user-friendly versions using the model, such as
-          ``bookmark`` or ``bookmark_list``.
-        * ``create_view_url``: The URL of the create view
-        """
         kwargs["view"] = self
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
@@ -297,6 +283,8 @@ class CRUDView(View):
         )
 
     def list(self, request, *args, **kwargs):
+        """GET handler for the list view."""
+
         queryset = self.get_queryset()
         filterset = self.get_filterset(queryset)
         if filterset is not None:
@@ -327,11 +315,15 @@ class CRUDView(View):
         return self.render_to_response(context)
 
     def detail(self, request, *args, **kwargs):
+        """GET handler for the detail view."""
+
         self.object = self.get_object()
         context = self.get_context_data()
         return self.render_to_response(context)
 
     def show_form(self, request, *args, **kwargs):
+        """GET handler for the create and update form views."""
+
         if self.role is Role.UPDATE:
             self.object = self.get_object()
         form = self.get_form(instance=self.object)
@@ -339,6 +331,8 @@ class CRUDView(View):
         return self.render_to_response(context)
 
     def process_form(self, request, *args, **kwargs):
+        """POST handler for the create and update form views."""
+
         if self.role is Role.UPDATE:
             self.object = self.get_object()
         form = self.get_form(
@@ -372,11 +366,15 @@ class CRUDView(View):
         return success_url
 
     def confirm_delete(self, request, *args, **kwargs):
+        """GET handler for the delete confirmation view."""
+
         self.object = self.get_object()
         context = self.get_context_data()
         return self.render_to_response(context)
 
     def process_deletion(self, request, *args, **kwargs):
+        """POST handler for the delete confirmation view."""
+
         self.object = self.get_object()
         self.object.delete()
         return HttpResponseRedirect(self.get_success_url())
