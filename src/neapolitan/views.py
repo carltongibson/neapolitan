@@ -191,23 +191,6 @@ class CRUDView(View):
 
     # Queryset and object lookup
 
-    def get_object(self):
-        """
-        Returns the object the view is displaying.
-        """
-        queryset = self.get_queryset()
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-
-        try:
-            lookup = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
-        except KeyError:
-            msg = "Lookup field '%s' was not provided in view kwargs to '%s'"
-            raise ImproperlyConfigured(
-                msg % (lookup_url_kwarg, self.__class__.__name__)
-            )
-
-        return get_object_or_404(queryset, **lookup)
-
     def get_queryset(self):
         """
         Returns the base queryset for the view.
@@ -226,6 +209,23 @@ class CRUDView(View):
             + "'get_queryset()'"
         )
         raise ImproperlyConfigured(msg % self.__class__.__name__)
+
+    def get_object(self):
+        """
+        Returns the object the view is displaying.
+        """
+        queryset = self.get_queryset()
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+
+        try:
+            lookup = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        except KeyError:
+            msg = "Lookup field '%s' was not provided in view kwargs to '%s'"
+            raise ImproperlyConfigured(
+                msg % (lookup_url_kwarg, self.__class__.__name__)
+            )
+
+        return get_object_or_404(queryset, **lookup)
 
     # Form instantiation
 

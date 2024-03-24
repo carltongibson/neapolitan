@@ -53,8 +53,18 @@ Delete View
         :pyobject: CRUDView.process_deletion
 
 
+QuerySet and object lookup
+==========================
 
+.. automethod:: CRUDView.get_queryset
 
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_queryset
+
+.. automethod:: CRUDView.get_object
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_object
 
 
 Other Methods
