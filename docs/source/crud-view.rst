@@ -67,10 +67,76 @@ QuerySet and object lookup
         :pyobject: CRUDView.get_object
 
 
-Other Methods
+Form handling
 =============
+
+.. automethod:: CRUDView.get_form_class
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_form_class
+
+.. automethod:: CRUDView.get_form
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_form
+
+.. automethod:: CRUDView.form_valid
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.form_valid
+
+.. automethod:: CRUDView.form_invalid
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.form_invalid
+
+.. automethod:: CRUDView.get_success_url
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_success_url
+
+Pagination and filtering
+========================
+
+.. automethod:: CRUDView.get_paginate_by
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_paginate_by
+
+.. automethod:: CRUDView.get_paginator
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_paginator
+
+.. automethod:: CRUDView.paginate_queryset
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.paginate_queryset
+
+.. automethod:: CRUDView.get_filterset
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_filterset
+
+Response rendering
+==================
+
+.. automethod:: CRUDView.get_context_object_name
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_context_object_name
 
 .. automethod:: CRUDView.get_context_data
 
   .. literalinclude:: ../../src/neapolitan/views.py
     :pyobject: CRUDView.get_context_data
+
+.. automethod:: CRUDView.get_template_names
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_template_names
+
+.. automethod:: CRUDView.render_to_response
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.render_to_response

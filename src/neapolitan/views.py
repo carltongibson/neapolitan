@@ -171,24 +171,6 @@ class CRUDView(View):
         self.object.delete()
         return HttpResponseRedirect(self.get_success_url())
 
-    # Filtering.
-
-    def get_filterset(self, queryset=None):
-        filterset_class = getattr(self, "filterset_class", None)
-        filterset_fields = getattr(self, "filterset_fields", None)
-
-        if filterset_class is None and filterset_fields:
-            filterset_class = filterset_factory(self.model, fields=filterset_fields)
-
-        if filterset_class is None:
-            return None
-
-        return filterset_class(
-            self.request.GET,
-            queryset=queryset,
-            request=self.request,
-        )
-
     # Queryset and object lookup
 
     def get_queryset(self):
@@ -227,7 +209,7 @@ class CRUDView(View):
 
         return get_object_or_404(queryset, **lookup)
 
-    # Form instantiation
+    # Form handling
 
     def get_form_class(self):
         """
@@ -252,7 +234,28 @@ class CRUDView(View):
         cls = self.get_form_class()
         return cls(data=data, files=files, **kwargs)
 
-    # Pagination
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        return self.render_to_response(context)
+
+    def get_success_url(self):
+        assert self.model is not None, (
+            "'%s' must define 'model' or override 'get_success_url()'"
+            % self.__class__.__name__
+        )
+        if self.role is Role.DELETE:
+            success_url = reverse(f"{self.model._meta.model_name}-list")
+        else:
+            success_url = reverse(
+                f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
+            )
+        return success_url
+
+    # Pagination and filtering
 
     def get_paginate_by(self):
         """
@@ -288,6 +291,22 @@ class CRUDView(View):
         except InvalidPage as exc:
             msg = "Invalid page (%s): %s"
             raise Http404(_(msg) % (page_number, str(exc)))
+
+    def get_filterset(self, queryset=None):
+        filterset_class = getattr(self, "filterset_class", None)
+        filterset_fields = getattr(self, "filterset_fields", None)
+
+        if filterset_class is None and filterset_fields:
+            filterset_class = filterset_factory(self.model, fields=filterset_fields)
+
+        if filterset_class is None:
+            return None
+
+        return filterset_class(
+            self.request.GET,
+            queryset=queryset,
+            request=self.request,
+        )
 
     # Response rendering
 
@@ -357,27 +376,6 @@ class CRUDView(View):
         return TemplateResponse(
             request=self.request, template=self.get_template_names(), context=context
         )
-
-    def form_valid(self, form):
-        self.object = form.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-    def form_invalid(self, form):
-        context = self.get_context_data(form=form)
-        return self.render_to_response(context)
-
-    def get_success_url(self):
-        assert self.model is not None, (
-            "'%s' must define 'model' or override 'get_success_url()'"
-            % self.__class__.__name__
-        )
-        if self.role is Role.DELETE:
-            success_url = reverse(f"{self.model._meta.model_name}-list")
-        else:
-            success_url = reverse(
-                f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
-            )
-        return success_url
 
     @classonlymethod
     def as_view(cls, role: Role, **initkwargs):
