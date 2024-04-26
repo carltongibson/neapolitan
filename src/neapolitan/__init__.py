@@ -35,4 +35,4 @@ started.
 Let's go! 🚀
 """
 
-__version__ = "24.3"
+__version__ = "24.4"
