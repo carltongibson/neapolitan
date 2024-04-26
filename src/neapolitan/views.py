@@ -2,13 +2,13 @@ import enum
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.paginator import InvalidPage, Paginator
-from django.db import models
 from django.forms import models as model_forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils.decorators import classonlymethod
+from django.utils.functional import classproperty
 from django.utils.translation import gettext as _
 from django.views.generic import View
 from django_filters.filterset import filterset_factory
@@ -58,6 +58,46 @@ class Role(enum.Enum):
             case Role.DELETE:
                 return {"template_name_suffix": "_confirm_delete"}
 
+    @property
+    def url_name_component(self):
+        return self.value
+
+    def url_pattern(self, view_cls):
+        url_base = view_cls.url_base
+        url_kwarg = view_cls.lookup_url_kwarg or view_cls.lookup_field
+        path_converter = view_cls.path_converter
+        match self:
+            case Role.LIST:
+                return f"{url_base}/"
+            case Role.DETAIL:
+                return f"{url_base}/<{path_converter}:{url_kwarg}>/"
+            case Role.CREATE:
+                return f"{url_base}/new/"
+            case Role.UPDATE:
+                return f"{url_base}/<{path_converter}:{url_kwarg}>/edit/"
+            case Role.DELETE:
+                return f"{url_base}/<{path_converter}:{url_kwarg}>/delete/"
+
+    def get_url(self, view_cls):
+        return path(
+            self.url_pattern(view_cls),
+            view_cls.as_view(role=self),
+            name=f"{view_cls.url_base}-{self.url_name_component}"
+        )
+
+    def reverse(self, view, object=None):
+        url_name = f"{view.url_base}-{self.url_name_component}"
+        url_kwarg = view.lookup_url_kwarg or view.lookup_field
+        match self:
+            case Role.LIST | Role.CREATE:
+                return reverse(url_name)
+            case _:
+                return reverse(
+                    url_name,
+                    kwargs={url_kwarg: getattr(object, view.lookup_field)},
+                )
+
+
 
 class CRUDView(View):
     """
@@ -76,6 +116,7 @@ class CRUDView(View):
     # value as `lookup_field`.
     lookup_field = "pk"
     lookup_url_kwarg = None
+    path_converter = "int"
     object = None
 
     # All the following are optional, and fall back to default values
@@ -250,10 +291,10 @@ class CRUDView(View):
             % self.__class__.__name__
         )
         if self.role is Role.DELETE:
-            success_url = reverse(f"{self.model._meta.model_name}-list")
+            success_url = reverse(f"{self.url_base}-list")
         else:
             success_url = reverse(
-                f"{self.model._meta.model_name}-detail", kwargs={"pk": self.object.pk}
+                f"{self.url_base}-detail", kwargs={"pk": self.object.pk}
             )
         return success_url
 
@@ -330,7 +371,7 @@ class CRUDView(View):
         kwargs["view"] = self
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
-        kwargs["create_view_url"] = reverse(f"{self.model._meta.model_name}-create")
+        kwargs["create_view_url"] = reverse(f"{self.url_base}-create")
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object
@@ -444,41 +485,23 @@ class CRUDView(View):
 
         return view
 
-    @classonlymethod
-    def get_urls(cls):
-        """Classmethod to generate URL patterns for the view."""
+    @classproperty
+    def url_base(cls):
+        """
+        The base component of generated URLs.
 
-        verbose_name = cls.model._meta.model_name
-        urlpatterns = [
-            path(
-                f"{verbose_name}/",
-                cls.as_view(role=Role.LIST),
-                name=f"{verbose_name}-list",
-            ),
-            path(
-                f"{verbose_name}/new/",
-                cls.as_view(role=Role.CREATE),
-                name=f"{verbose_name}-create",
-            ),
-            # TODO: make the lookup field configurable. Determined by
-            # lookup_field and lookup_url_kwarg. ???: how to handle the type of
-            # the converter? (int, slug, etc.)
-            # It's just a string that gets passed to path(). SO an extra view
-            # field with the name of a registered converter.
-            path(
-                f"{verbose_name}/<int:pk>/",
-                cls.as_view(role=Role.DETAIL),
-                name=f"{verbose_name}-detail",
-            ),
-            path(
-                f"{verbose_name}/<int:pk>/edit/",
-                cls.as_view(role=Role.UPDATE),
-                name=f"{verbose_name}-update",
-            ),
-            path(
-                f"{verbose_name}/<int:pk>/delete/",
-                cls.as_view(role=Role.DELETE),
-                name=f"{verbose_name}-delete",
-            ),
-        ]
-        return urlpatterns
+        Defaults to the model's name, but may be overridden by setting
+        `url_base` directly on the class, overriding this property::
+
+            class AlternateCRUDView(CRUDView):
+                model = Bookmark
+                url_base = "something-else"
+        """
+        return cls.model._meta.model_name
+
+    @classonlymethod
+    def get_urls(cls, roles=None):
+        """Classmethod to generate URL patterns for the view."""
+        if roles is None:
+            roles = iter(Role)
+        return [role.get_url(cls) for role in roles]

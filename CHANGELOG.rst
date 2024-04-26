@@ -13,6 +13,71 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.4
+====
+
+* ``CRUDView`` subclasses may now pass a set of ``roles`` to ``get_urls()`` in
+  order to route only a subset of all the available CRUD roles.
+
+  As an example, to route only the list and detail views, the README/Quickstart example
+  would become::
+
+    from neapolitan.views import CRUDView, Role
+    from .models import Bookmark
+
+    class BookmarkView(CRUDView):
+        model = Bookmark
+        fields = ["url", "title", "note"]
+        filterset_fields = [
+            "favourite",
+        ]
+
+    urlpatterns = [
+        *BookmarkView.get_urls(roles={Role.LIST, Role.DETAIL}),
+    ]
+
+  In order to keep this logic within the view here, you would likely override
+  ``get_urls()`` in this case, rather than calling it from the outside in your
+  URL configuration.
+
+* As well as setting the existing ``lookup_field`` (which defaults to ``"pk"``)
+  and ``lookup_url_kwarg`` (which defaults to ``lookup_field`` if not set) you
+  may now set ``path_converter`` and ``url_base`` attributes on your
+  ``CRUDView`` subclass in order to customise URL generation.
+
+  For example, for this model and ``CRUDView``::
+
+    class NamedCollection(models.Model):
+        name = models.CharField(max_length=25, unique=True)
+        code = models.UUIDField(unique=True, default=uuid.uuid4)
+
+    class NamedCollectionView(CRUDView):
+        model = NamedCollection
+        fields = ["name", "code"]
+
+        lookup_field = "code"
+        path_converter = "uuid"
+        url_base = "named-collections"
+
+  Will generate URLs such as ``/named-collections/``,
+  ``/named-collections/<uuid:code>/``, and so on. URL patterns will be named
+  using ``url_base``: "named-collections-list", "named-collections-detail", and
+  so on.
+
+  Thanks to Kasun Herath for preliminary discussion and exploration here.
+
+* BREAKING CHANGE. In order to facilitate the above the ``object_list``
+  template tag now takes the whole ``view`` from the context, rather than just
+  the ``view.fields``.
+
+  If you've overridden the ``object_list.html`` template and are still using
+  the ``object_list`` template tag, you will need to update your usage to be
+  like this:
+
+  .. code-block: html+django
+
+    {% object_list object_list view %}
+
 24.3
 ====
 

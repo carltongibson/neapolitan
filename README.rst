@@ -24,6 +24,7 @@ I want easy CRUD views for it, without it taking all day:
 
     # urls.py
     from neapolitan.views import CRUDView
+    from .models import Bookmark
 
     class BookmarkView(CRUDView):
         model = Bookmark
@@ -32,7 +33,9 @@ I want easy CRUD views for it, without it taking all day:
             "favourite",
         ]
 
-    urlpatterns = [ ... ] + BookmarkView.get_urls()
+    urlpatterns = [
+        *BookmarkView.get_urls(),
+    ]
 
 Neapolitan's ``CRUDView`` provides the standard list, detail,
 create, edit, and delete views for a model, as well as the hooks you need to

@@ -12,7 +12,7 @@
 </div>
 
 {% if object_list %}
-    {% object_list object_list view.fields %}
+    {% object_list object_list view %}
 {% else %}
     <p class="mt-8">There are no {{ object_verbose_name_plural }}. Create one now?</p>
 {% endif %}
