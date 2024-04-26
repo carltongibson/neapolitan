@@ -74,7 +74,7 @@ here:
   the ``object_list`` template tag, you will need to update your usage to be
   like this:
 
-  .. code-block: html+django
+  .. code-block:: html+django
 
     {% object_list object_list view %}
 
