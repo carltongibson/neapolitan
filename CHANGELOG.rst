@@ -78,6 +78,10 @@ here:
 
     {% object_list object_list view %}
 
+* Improved app folder discovery in mktemplate command.
+
+  Thanks to Andrew Miller.
+
 24.3
 ====
 
