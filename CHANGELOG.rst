@@ -59,7 +59,7 @@ here:
         path_converter = "uuid"
         url_base = "named-collections"
 
-  Will generate URLs such as ``/named-collections/``,
+  ``CRUDView`` will generate URLs such as ``/named-collections/``,
   ``/named-collections/<uuid:code>/``, and so on. URL patterns will be named
   using ``url_base``: "named-collections-list", "named-collections-detail", and
   so on.
