@@ -9,9 +9,12 @@ CRUDView Reference
 Request Handlers
 ================
 
-The core of a class-based view are the request handlers — methods that convert an HTTP request into an HTTP response. The request handlers are the essence of the **Django view**.
+The core of a class-based view are the request handlers — methods that convert
+an HTTP request into an HTTP response. The request handlers are the essence of
+the **Django view**.
 
-Neapolitan's ``CRUDView`` provides handlers the standard list, detail, create, edit, and delete views for a model.
+Neapolitan's ``CRUDView`` provides handlers the standard list, detail, create,
+edit, and delete views for a model.
 
 List and Detail Views
 ----------------------
@@ -145,3 +148,36 @@ URLs and view callables
 =======================
 
 .. automethod:: CRUDView.get_urls
+
+    This is the usual entry-point for routing all CRUD URLs in a single pass::
+
+        urlpatterns = [
+            *BookmarkView.get_urls(),
+        ]
+
+    Optionally, you may provide an appropriate set of roles in order to limit
+    the handlers exposed::
+
+        urlpatterns = [
+            *BookmarkView.get_urls(roles={Role.LIST, Role.DETAIL}),
+        ]
+
+    Subclasses may wish to override ``get_urls()`` in order to encapsulate such
+    logic.
+
+    .. literalinclude:: ../../src/neapolitan/views.py
+        :pyobject: CRUDView.get_urls
+
+
+.. automethod:: CRUDView.as_view
+
+    This is the lower-level method used to manually route individual URLs.
+
+    It's extends the Django `View.as_view()` method, and should be passed a an
+    appropriate ``Role`` giving the handlers to be exposed::
+
+        path(
+            "bookmarks/",
+            BookmarkCRUDView.as_view(role=Role.LIST),
+            name="bookmark-list",
+        )
