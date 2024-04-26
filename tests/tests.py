@@ -4,9 +4,9 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.html import escape
-from neapolitan.views import CRUDView
+from neapolitan.views import CRUDView, Role
 
-from .models import Bookmark
+from .models import Bookmark, NamedCollection
 
 
 class BookmarkView(CRUDView):
@@ -17,7 +17,20 @@ class BookmarkView(CRUDView):
     ]
 
 
-urlpatterns = [] + BookmarkView.get_urls()
+class NamedCollectionView(CRUDView):
+    model = NamedCollection
+    fields = ["name", "code"]
+
+    lookup_field = "code"
+    path_converter = "uuid"
+
+    url_base = "named_collections"
+
+
+urlpatterns = [
+    *BookmarkView.get_urls(),
+    *NamedCollectionView.get_urls(),
+]
 
 
 class BasicTests(TestCase):
@@ -39,6 +52,8 @@ class BasicTests(TestCase):
             title="Carlton Gibson - Fosstodon",
             note="Carlton Gibson on Fosstodon",
         )
+
+        cls.main_collection = NamedCollection.objects.create(name="main")
 
     def test_list(self):
         response = self.client.get("/bookmark/")
@@ -126,14 +141,105 @@ class BasicTests(TestCase):
         self.assertNotContains(response, self.github.title)
         self.assertNotContains(response, self.fosstodon.title)
 
+    def test_custom_mount_url(self):
+        """Test view URL base"""
+        response = self.client.get("/collection/")
+        self.assertEqual(response.status_code, 404)
+
+        response = self.client.get("/named_collections/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_custom_lookup_field(self):
+        """Test custom view.lookup_field"""
+        response = self.client.get(f"/named_collections/{self.main_collection.code}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.main_collection.name)
+
+    def test_lookup_url_converter(self):
+        """Test view.lookup_url_converter"""
+        response = self.client.get(f"/named_collections/{self.main_collection.id}/")
+        self.assertEqual(response.status_code, 404)
+
+        response = self.client.get(f"/named_collections/{self.main_collection.code}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.main_collection.name)
+
+
+class RoleTests(TestCase):
+    def test_overriding_url_base(self):
+        class AlternateCRUDView(CRUDView):
+            model = Bookmark
+            url_base = "something-else"
+
+        self.assertEqual(AlternateCRUDView.url_base, "something-else")
+        self.assertEqual(
+            Role.LIST.url_pattern(
+                AlternateCRUDView,
+            ),
+            "something-else/",
+        )
+
+    def test_roles_provide_a_url_name_component(self):
+        # The URL name is constructed in part by the role value.
+        tests = [
+            (Role.LIST, "list"),
+            (Role.DETAIL, "detail"),
+            (Role.CREATE, "create"),
+            (Role.UPDATE, "update"),
+            (Role.DELETE, "delete"),
+        ]
+        for role, name in tests:
+            with self.subTest(role=role):
+                self.assertEqual(role.url_name_component, name)
+
+    def test_url_pattern_generation(self):
+        tests = [
+            (Role.LIST, "bookmark/"),
+            (Role.DETAIL, "bookmark/<int:pk>/"),
+            (Role.CREATE, "bookmark/new/"),
+            (Role.UPDATE, "bookmark/<int:pk>/edit/"),
+            (Role.DELETE, "bookmark/<int:pk>/delete/"),
+        ]
+        for role, pattern in tests:
+            with self.subTest(role=role):
+                self.assertEqual(
+                    role.url_pattern(BookmarkView),
+                    pattern,
+                )
+
+    def test_role_url_reversing(self):
+        bookmark = Bookmark.objects.create(
+            url="https://noumenal.es/",
+            title="Noumenal • Dr Carlton Gibson",
+            note="Carlton Gibson's homepage. Blog, Contact and Project links.",
+            favourite=True,
+        )
+        tests = [
+            (Role.LIST, "/bookmark/"),
+            (Role.DETAIL, f"/bookmark/{bookmark.pk}/"),
+            (Role.CREATE, "/bookmark/new/"),
+            (Role.UPDATE, f"/bookmark/{bookmark.pk}/edit/"),
+            (Role.DELETE, f"/bookmark/{bookmark.pk}/delete/"),
+        ]
+        for role, url in tests:
+            with self.subTest(role=role):
+                self.assertEqual(
+                    role.reverse(BookmarkView, bookmark),
+                    url,
+                )
+
+    def test_routing_subset_of_roles(self):
+        urlpatterns = BookmarkView.get_urls(roles={Role.LIST, Role.DETAIL})
+        self.assertEqual(len(urlpatterns), 2)
+
 
 class MktemplateCommandTest(TestCase):
     def test_mktemplate_command(self):
         # Run the command
-        call_command('mktemplate', 'tests.Bookmark', '--list')
+        call_command("mktemplate", "tests.Bookmark", "--list")
 
         # Check if the file was created
-        file_path = 'tests/templates/tests/bookmark_list.html'
+        file_path = "tests/templates/tests/bookmark_list.html"
         self.assertTrue(os.path.isfile(file_path))
 
         # Remove the created file
