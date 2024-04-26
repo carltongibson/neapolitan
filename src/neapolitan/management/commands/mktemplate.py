@@ -5,6 +5,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import TemplateDoesNotExist, get_template
 from django.template.engine import Engine
+from django.apps import apps
 
 class Command(BaseCommand):
     help = "Bootstrap a CRUD template for a model, copying from the active neapolitan default templates."
@@ -92,7 +93,8 @@ class Command(BaseCommand):
             # Find target directory.
             # 1. If  f"{app_name}/templates" exists, use that.
             # 2. Otherwise, use first project level template dir.
-            target_dir = f"{app_name}/templates"
+            app_config = apps.get_app_config(app_name)
+            target_dir = f"{app_config.path}/templates"
             if not Path(target_dir).exists():
                 try:
                     target_dir = Engine.get_default().template_dirs[0]
