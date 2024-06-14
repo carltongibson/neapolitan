@@ -1,3 +1,4 @@
+# mypy: disable-error-code="import-untyped"
 import os
 
 from django.core.management import call_command
@@ -163,6 +164,12 @@ class BasicTests(TestCase):
         response = self.client.get(f"/named_collections/{self.main_collection.code}/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.main_collection.name)
+
+    def test_exclude_roles(self):
+        """Test view.get_urls with exclude"""
+        urlpatterns = BookmarkView.get_urls(exclude=[Role.LIST])
+        self.assertFalse(any(url.name == "bookmark-list" for url in urlpatterns))
+        self.assertIn("bookmark-detail", [url.name for url in urlpatterns])
 
 
 class RoleTests(TestCase):

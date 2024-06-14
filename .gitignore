@@ -5,3 +5,4 @@ neapolitan.code-workspace
 dist
 .idea
 
+.venv

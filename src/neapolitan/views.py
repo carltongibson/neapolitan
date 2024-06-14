@@ -1,7 +1,10 @@
+# mypy: disable-error-code="import-untyped"
 import enum
+from typing import List as list_type
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.paginator import InvalidPage, Paginator
+from django.db import models
 from django.forms import models as model_forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -82,7 +85,7 @@ class Role(enum.Enum):
         return path(
             self.url_pattern(view_cls),
             view_cls.as_view(role=self),
-            name=f"{view_cls.url_base}-{self.url_name_component}"
+            name=f"{view_cls.url_base}-{self.url_name_component}",
         )
 
     def reverse(self, view, object=None):
@@ -98,7 +101,6 @@ class Role(enum.Enum):
                 )
 
 
-
 class CRUDView(View):
     """
     CRUDView is Neapolitan's core. It provides the standard list, detail,
@@ -106,9 +108,9 @@ class CRUDView(View):
     be able to customise any part of that.
     """
 
-    role: Role
-    model = None
-    fields = None  # TODO: handle this being None.
+    role: Role | None = None
+    model: models.Model | None = None
+    fields: list[str] | None = None  # TODO: handle this being None.
 
     # Object lookup parameters. These are used in the URL kwargs, and when
     # performing the model instance lookup.
@@ -423,7 +425,7 @@ class CRUDView(View):
     # URLs and view callables
 
     @classonlymethod
-    def as_view(cls, role: Role, **initkwargs):
+    def as_view(cls, role: Role, **initkwargs):  # type: ignore[override]
         """Main entry point for a request-response process."""
         for key in initkwargs:
             if key in cls.http_method_names:
@@ -466,8 +468,8 @@ class CRUDView(View):
 
             return self.dispatch(request, *args, **kwargs)
 
-        view.view_class = cls
-        view.view_initkwargs = initkwargs
+        view.view_class = cls  # type: ignore[attr-defined]
+        view.view_initkwargs = initkwargs  # type: ignore[attr-defined]
 
         # __name__ and __qualname__ are intentionally left unchanged as
         # view_class should be used to robustly determine the name of the view
@@ -500,8 +502,18 @@ class CRUDView(View):
         return cls.model._meta.model_name
 
     @classonlymethod
-    def get_urls(cls, roles=None):
+    def get_urls(
+        cls,
+        roles: list_type[Role] | None = None,
+        *,
+        exclude: list_type[Role] | None = None,
+    ):
         """Classmethod to generate URL patterns for the view."""
+        if roles is not None and exclude is not None:
+            msg = "Cannot specify both roles and exclude."
+            raise ValueError(msg)
+        if exclude is not None:
+            roles = [role for role in Role if role not in exclude]
         if roles is None:
-            roles = iter(Role)
+            roles = [role for role in Role]
         return [role.get_url(cls) for role in roles]
