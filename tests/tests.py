@@ -27,9 +27,15 @@ class NamedCollectionView(CRUDView):
     url_base = "named_collections"
 
 
+class BookmarkListOnlyView(CRUDView):
+    model = Bookmark
+    url_base = "bookmarklist"
+
+
 urlpatterns = [
     *BookmarkView.get_urls(),
     *NamedCollectionView.get_urls(),
+    *BookmarkListOnlyView.get_urls({Role.LIST}),
 ]
 
 
@@ -231,6 +237,13 @@ class RoleTests(TestCase):
     def test_routing_subset_of_roles(self):
         urlpatterns = BookmarkView.get_urls(roles={Role.LIST, Role.DETAIL})
         self.assertEqual(len(urlpatterns), 2)
+
+    def test_rendering_list_only_role(self):
+        response = self.client.get('/bookmarklist/')
+        self.assertEqual(response.status_code, 200)
+
+        for lookup in ['View', 'Edit', 'Delete']:
+            self.assertNotContains(response, f'>{lookup}</a>')
 
 
 class MktemplateCommandTest(TestCase):
