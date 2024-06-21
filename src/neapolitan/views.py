@@ -88,15 +88,18 @@ class Role(enum.Enum):
     def reverse(self, view, object=None):
         url_name = f"{view.url_base}-{self.url_name_component}"
         url_kwarg = view.lookup_url_kwarg or view.lookup_field
+        match self:
+            case Role.LIST | Role.CREATE:
+                return reverse(url_name)
+            case _:
+                return reverse(
+                    url_name,
+                    kwargs={url_kwarg: getattr(object, view.lookup_field)},
+                )
+
+    def maybe_reverse(self, view, object=None):
         try:
-            match self:
-                case Role.LIST | Role.CREATE:
-                    return reverse(url_name)
-                case _:
-                    return reverse(
-                        url_name,
-                        kwargs={url_kwarg: getattr(object, view.lookup_field)},
-                    )
+            return self.reverse(view, object)
         except NoReverseMatch:
             return None
 
@@ -373,10 +376,7 @@ class CRUDView(View):
         kwargs["view"] = self
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
-        try:
-            kwargs["create_view_url"] = reverse(f"{self.url_base}-create")
-        except NoReverseMatch:
-            kwargs["create_view_url"] = None
+        kwargs["create_view_url"] = Role.CREATE.maybe_reverse(self)
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object

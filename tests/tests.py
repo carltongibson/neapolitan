@@ -29,6 +29,7 @@ class NamedCollectionView(CRUDView):
 
 class BookmarkListOnlyView(CRUDView):
     model = Bookmark
+    fields = ["url", "title", "note"]
     url_base = "bookmarklist"
 
 
@@ -239,6 +240,12 @@ class RoleTests(TestCase):
         self.assertEqual(len(urlpatterns), 2)
 
     def test_rendering_list_only_role(self):
+        bookmark = Bookmark.objects.create(
+            url="https://noumenal.es/",
+            title="Noumenal • Dr Carlton Gibson",
+            note="Carlton Gibson's homepage. Blog, Contact and Project links.",
+            favourite=True,
+        )
         response = self.client.get('/bookmarklist/')
         self.assertEqual(response.status_code, 200)
 
