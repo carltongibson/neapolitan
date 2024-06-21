@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.html import escape
-from neapolitan.views import CRUDView, Role
+from neapolitan.views import CRUDView, Role, classonlymethod
 
 from .models import Bookmark, NamedCollection
 
@@ -27,9 +27,20 @@ class NamedCollectionView(CRUDView):
     url_base = "named_collections"
 
 
+class BookmarkListOnlyView(CRUDView):
+    model = Bookmark
+    fields = ["url", "title", "note"]
+    url_base = "bookmarklist"
+
+    @classonlymethod
+    def get_urls(cls, roles=None):
+        return super().get_urls(roles={Role.LIST})
+
+
 urlpatterns = [
     *BookmarkView.get_urls(),
     *NamedCollectionView.get_urls(),
+    *BookmarkListOnlyView.get_urls(),
 ]
 
 
@@ -231,6 +242,19 @@ class RoleTests(TestCase):
     def test_routing_subset_of_roles(self):
         urlpatterns = BookmarkView.get_urls(roles={Role.LIST, Role.DETAIL})
         self.assertEqual(len(urlpatterns), 2)
+
+    def test_rendering_list_only_role(self):
+        bookmark = Bookmark.objects.create(
+            url="https://noumenal.es/",
+            title="Noumenal • Dr Carlton Gibson",
+            note="Carlton Gibson's homepage. Blog, Contact and Project links.",
+            favourite=True,
+        )
+        response = self.client.get('/bookmarklist/')
+        self.assertEqual(response.status_code, 200)
+
+        for lookup in ['View', 'Edit', 'Delete']:
+            self.assertNotContains(response, f'>{lookup}</a>')
 
 
 class MktemplateCommandTest(TestCase):

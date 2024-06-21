@@ -6,7 +6,7 @@ from django.forms import models as model_forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.urls import path, reverse
+from django.urls import path, reverse, NoReverseMatch
 from django.utils.decorators import classonlymethod
 from django.utils.functional import classproperty
 from django.utils.translation import gettext as _
@@ -97,6 +97,11 @@ class Role(enum.Enum):
                     kwargs={url_kwarg: getattr(object, view.lookup_field)},
                 )
 
+    def maybe_reverse(self, view, object=None):
+        try:
+            return self.reverse(view, object)
+        except NoReverseMatch:
+            return None
 
 
 class CRUDView(View):
@@ -371,7 +376,7 @@ class CRUDView(View):
         kwargs["view"] = self
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
-        kwargs["create_view_url"] = reverse(f"{self.url_base}-create")
+        kwargs["create_view_url"] = Role.CREATE.maybe_reverse(self)
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object

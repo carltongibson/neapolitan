@@ -8,9 +8,12 @@ register = template.Library()
 
 def action_links(view, object):
     actions = [
-        (Role.DETAIL.reverse(view, object), "View"),
-        (Role.UPDATE.reverse(view, object), "Edit"),
-        (Role.DELETE.reverse(view, object), "Delete"),
+        (url, name)
+        for url, name in [
+            (Role.DETAIL.maybe_reverse(view, object), "View"),
+            (Role.UPDATE.maybe_reverse(view, object), "Edit"),
+            (Role.DELETE.maybe_reverse(view, object), "Delete"),
+        ] if url is not None
     ]
     links = [f"<a href='{url}'>{anchor_text}</a>" for url, anchor_text in actions]
     return mark_safe(" | ".join(links))

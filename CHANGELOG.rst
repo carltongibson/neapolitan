@@ -13,6 +13,13 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.5
+====
+
+* Fixed an error in 24.4 reversing non-routed URLs when only using a subset of roles.
+
+  Thanks to Emmanuelle Delescolle.
+
 24.4
 ====
 
