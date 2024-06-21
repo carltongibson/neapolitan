@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.html import escape
-from neapolitan.views import CRUDView, Role
+from neapolitan.views import CRUDView, Role, classonlymethod
 
 from .models import Bookmark, NamedCollection
 
@@ -32,11 +32,15 @@ class BookmarkListOnlyView(CRUDView):
     fields = ["url", "title", "note"]
     url_base = "bookmarklist"
 
+    @classonlymethod
+    def get_urls(cls, roles=None):
+        return super().get_urls(roles={Role.LIST})
+
 
 urlpatterns = [
     *BookmarkView.get_urls(),
     *NamedCollectionView.get_urls(),
-    *BookmarkListOnlyView.get_urls({Role.LIST}),
+    *BookmarkListOnlyView.get_urls(),
 ]
 
 
