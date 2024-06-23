@@ -223,7 +223,6 @@ class MktemplateCommandTest(TestCase):
 
         # Check if the file was created
         file_path = APP_ROOT / "templates/test_app/bookmark_list.html"
-        print(file_path)
         self.assertTrue(os.path.isfile(file_path))
 
         # Remove the created file

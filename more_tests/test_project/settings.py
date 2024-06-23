@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "neapolitan",
     "test_app",
+    "another_test_app"
 ]
 
 
