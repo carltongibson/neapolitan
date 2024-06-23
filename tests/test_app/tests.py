@@ -1,36 +1,19 @@
 import os
 
+from pathlib import Path
+
 from django.core.management import call_command
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.html import escape
+
 from neapolitan.views import CRUDView, Role
 
 from .models import Bookmark, NamedCollection
+from .urls import BookmarkView
 
-
-class BookmarkView(CRUDView):
-    model = Bookmark
-    fields = ["url", "title", "note"]
-    filterset_fields = [
-        "favourite",
-    ]
-
-
-class NamedCollectionView(CRUDView):
-    model = NamedCollection
-    fields = ["name", "code"]
-
-    lookup_field = "code"
-    path_converter = "uuid"
-
-    url_base = "named_collections"
-
-
-urlpatterns = [
-    *BookmarkView.get_urls(),
-    *NamedCollectionView.get_urls(),
-]
+APP_ROOT = Path(__file__).parent
+PROJECT_ROOT = APP_ROOT.parent
 
 
 class BasicTests(TestCase):
@@ -236,10 +219,10 @@ class RoleTests(TestCase):
 class MktemplateCommandTest(TestCase):
     def test_mktemplate_command(self):
         # Run the command
-        call_command("mktemplate", "tests.Bookmark", "--list")
+        call_command("mktemplate", "test_app.Bookmark", "--list")
 
         # Check if the file was created
-        file_path = "tests/templates/tests/bookmark_list.html"
+        file_path = APP_ROOT / "templates/test_app/bookmark_list.html"
         self.assertTrue(os.path.isfile(file_path))
 
         # Remove the created file

@@ -1,8 +1,8 @@
 
 test +FLAGS='':
-    django-admin test --settings=tests.settings --pythonpath=. {{FLAGS}}
+    python tests/manage.py test tests/ {{FLAGS}}
 
 coverage:
     coverage erase
-    coverage run -m django test --settings=tests.settings --pythonpath=.
+    coverage run tests/manage.py test tests/
     coverage report
