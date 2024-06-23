@@ -4,5 +4,5 @@ test +FLAGS='':
 
 coverage:
     coverage erase
-    coverage run -m tests/manage.py test tests/
+    coverage run tests/manage.py test tests/
     coverage report
