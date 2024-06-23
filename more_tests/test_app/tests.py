@@ -12,7 +12,8 @@ from neapolitan.views import CRUDView, Role
 from .models import Bookmark, NamedCollection
 from .urls import BookmarkView
 
-PROJECT_ROOT = Path(__file__).parent.parent
+APP_ROOT = Path(__file__).parent
+PROJECT_ROOT = APP_ROOT.parent
 
 
 class BasicTests(TestCase):
@@ -221,7 +222,7 @@ class MktemplateCommandTest(TestCase):
         call_command("mktemplate", "test_app.Bookmark", "--list")
 
         # Check if the file was created
-        file_path = PROJECT_ROOT / "templates/test_app/bookmark_list.html"
+        file_path = APP_ROOT / "templates/test_app/bookmark_list.html"
         print(file_path)
         self.assertTrue(os.path.isfile(file_path))
 
