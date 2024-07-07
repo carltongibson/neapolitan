@@ -1,7 +1,7 @@
 import os
 
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.html import escape
 from neapolitan.views import CRUDView, Role
@@ -240,6 +240,34 @@ class MktemplateCommandTest(TestCase):
 
         # Check if the file was created
         file_path = "tests/templates/tests/bookmark_list.html"
+        self.assertTrue(os.path.isfile(file_path))
+
+        # Remove the created file
+        os.remove(file_path)
+
+
+    @override_settings(TEMPLATES = [
+        {
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            "DIRS": ["tests/extra_templates"],
+            "APP_DIRS": False,
+            "OPTIONS": {
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
+                ],
+                "debug": True,
+            },
+        }
+    ])
+    def test_mktemplate_command_with_project_template_dir(self):
+        # Run the command
+        call_command("mktemplate", "tests.Bookmark", "--list")
+
+        # Check if the file was created
+        file_path = "tests/extra_templates/tests/bookmark_list.html"
         self.assertTrue(os.path.isfile(file_path))
 
         # Remove the created file
