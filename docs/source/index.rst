@@ -25,6 +25,7 @@ Contents
     tutorial
     crud-view
     templates
+    how-tos
 
 
 A quick look
