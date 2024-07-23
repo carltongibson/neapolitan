@@ -1,7 +1,7 @@
 import os
 
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils.html import escape
 from neapolitan.views import CRUDView, Role, classonlymethod
@@ -263,7 +263,7 @@ class MktemplateCommandTest(TestCase):
         call_command("mktemplate", "tests.Bookmark", "--list")
 
         # Check if the file was created
-        file_path = "tests/templates/tests/bookmark_list.html"
+        file_path = "tests/test_templates/tests/bookmark_list.html"
         self.assertTrue(os.path.isfile(file_path))
 
         # Remove the created file

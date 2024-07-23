@@ -19,7 +19,7 @@ SECRET_KEY = "a-not-very-secret-test-secret-key"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["tests/test_templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

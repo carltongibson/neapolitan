@@ -97,7 +97,17 @@ class Command(BaseCommand):
             target_dir = f"{app_config.path}/templates"
             if not Path(target_dir).exists():
                 try:
-                    target_dir = Engine.get_default().template_dirs[0]
+                    default_engine = Engine.get_default()
+                    # Sometimes the default engine is a subclass of BaseEngine
+                    # which defines the template_dirs property.
+                    # It can also be an instance of Engine itself which does
+                    # not derive from BaseEngine and does *not* have
+                    # the template_dirs property
+                    try:
+                        template_dirs = default_engine.template_dirs
+                    except AttributeError:
+                        template_dirs = default_engine.dirs
+                    target_dir = template_dirs[0]
                 except (ImproperlyConfigured, IndexError):
                     raise CommandError(
                         "No app or project level template dir found."
