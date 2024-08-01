@@ -13,6 +13,14 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.6
+====
+
+* Allowed overriding Role provided initkwargs in ``as_view()``.
+
+  Kwargs provided to ``as_view()`` will now take precedence over any Role
+  provided defaults.
+
 24.5
 ====
 
