@@ -6,7 +6,7 @@ from django.forms import models as model_forms
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
-from django.urls import path, reverse, NoReverseMatch
+from django.urls import NoReverseMatch, path, reverse
 from django.utils.decorators import classonlymethod
 from django.utils.functional import classproperty
 from django.utils.translation import gettext as _
@@ -456,7 +456,8 @@ class CRUDView(View):
                 )
 
         def view(request, *args, **kwargs):
-            self = cls(**initkwargs, **role.extra_initkwargs())
+            # Merge Role default and provided initkwargs.
+            self = cls(**{**role.extra_initkwargs(), **initkwargs})
             self.role = role
             self.setup(request, *args, **kwargs)
             if not hasattr(self, "request"):

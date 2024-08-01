@@ -1,9 +1,11 @@
 import os
 
 from django.core.management import call_command
-from django.test import TestCase
+from django.http import HttpResponse
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from django.utils.html import escape
+
 from neapolitan.views import CRUDView, Role, classonlymethod
 
 from .models import Bookmark, NamedCollection
@@ -174,6 +176,23 @@ class BasicTests(TestCase):
         response = self.client.get(f"/named_collections/{self.main_collection.code}/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.main_collection.name)
+
+    def test_overriding_role_initkwargs(self):
+        """as_view must proritise initkwargs over Role extra_initkwargs."""
+
+        class InitKwargsCRUDView(CRUDView):
+            model = Bookmark
+
+            def detail(self, request, *args, **kwargs):
+                return HttpResponse(self.template_name_suffix)
+
+        view = InitKwargsCRUDView.as_view(
+            role=Role.DETAIL,
+            template_name_suffix='_test_suffix'
+        )
+        request = RequestFactory().get('/')
+        response = view(request)
+        self.assertContains(response, '_test_suffix')
 
 
 class RoleTests(TestCase):
