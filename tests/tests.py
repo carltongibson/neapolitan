@@ -178,7 +178,7 @@ class BasicTests(TestCase):
         self.assertContains(response, self.main_collection.name)
 
     def test_overriding_role_initkwargs(self):
-        """as_view must proritise initkwargs over Role extra_initkwargs."""
+        """as_view must prioritise initkwargs over Role extra_initkwargs."""
 
         class InitKwargsCRUDView(CRUDView):
             model = Bookmark
