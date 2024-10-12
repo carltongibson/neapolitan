@@ -1,24 +1,24 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load neapolitan %}
 
 {% block content %}
-
-<div class="sm:flex sm:items-center">
+  <div class="sm:flex sm:items-center">
     <h1 class="sm:flex-auto text-base font-semibold leading-6 text-gray-900">{{ object_verbose_name_plural|capfirst }}</h1>
     {% if create_view_url %}
-    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-        <a class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          href="{{ create_view_url }}">Add a new {{ object_verbose_name }}</a>
-    </div>
+      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <a class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="{{ create_view_url }}">Add a new {{ object_verbose_name }}</a>
+      </div>
     {% endif %}
-</div>
+  </div>
 
-{% if object_list %}
+  {% if object_list %}
     {% object_list object_list view %}
-{% else %}
+    {% if is_paginated %}
+      {% pagination page_obj %}
+    {% endif %}
+  {% else %}
     <p class="mt-8">There are no {{ object_verbose_name_plural }}. Create one now?</p>
-{% endif %}
+  {% endif %}
 
-<hr>
-
+  <hr class="border-t border-gray-300 my-6">
 {% endblock %}

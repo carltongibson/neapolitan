@@ -68,3 +68,19 @@ def object_list(objects, view):
         "headers": headers,
         "object_list": object_list,
     }
+
+
+@register.inclusion_tag("neapolitan/partial/pagination.html")
+def pagination(page_obj):
+    """
+    Renders pagination controls for the given page object.
+
+    Inclusion tag usage::
+
+        {% pagination page_obj %}
+
+    Template: ``neapolitan/partial/pagination.html`` - Will render the pagination controls.
+    """
+    return {
+        "page_obj": page_obj,
+    }
