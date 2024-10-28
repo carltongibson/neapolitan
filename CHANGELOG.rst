@@ -13,6 +13,13 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.7
+====
+
+* Fixed URL ordering for slug path converters.
+
+  Thanks to Sam Jennings.
+
 24.6
 ====
 
