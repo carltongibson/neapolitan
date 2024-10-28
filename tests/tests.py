@@ -274,6 +274,32 @@ class RoleTests(TestCase):
 
         for lookup in ['View', 'Edit', 'Delete']:
             self.assertNotContains(response, f'>{lookup}</a>')
+    
+    def test_url_ordering_for_slug_path_converters(self):
+        # Ensures correct ordering of URL patterns when using str-based path converters
+        # https://github.com/carltongibson/neapolitan/issues/64
+        class BookmarkCRUDView(CRUDView):
+            model = Bookmark
+            path_converter = "slug"
+            lookup_url_kwarg = "title"
+
+        # Get the generated URLs
+        urls = BookmarkCRUDView.get_urls()
+
+        # Extract paths for the URLs to check ordering
+        url_paths = [url.pattern._route for url in urls]
+
+        # Expected order of URL paths
+        expected_paths = [
+            'bookmark/',              # LIST
+            'bookmark/new/',          # CREATE should come before any slug-based URLs
+            'bookmark/<slug:title>/',  # DETAIL
+            'bookmark/<slug:title>/edit/',    # UPDATE
+            'bookmark/<slug:title>/delete/',  # DELETE
+        ]
+
+        # Assert that the generated URL paths match the expected order
+        self.assertEqual(url_paths, expected_paths)
 
 
 class MktemplateCommandTest(TestCase):
