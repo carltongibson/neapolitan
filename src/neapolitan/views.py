@@ -19,8 +19,8 @@ from django_filters.filterset import filterset_factory
 # as_view() call.
 class Role(enum.Enum):
     LIST = "list"
-    DETAIL = "detail"
     CREATE = "create"
+    DETAIL = "detail"
     UPDATE = "update"
     DELETE = "delete"
 
