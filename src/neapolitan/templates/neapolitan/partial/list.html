@@ -27,8 +27,10 @@
                   {% endif %}
                   ">{{ field }}</td>
     {% endfor %}
-        <td class="py-3.5 px-3 text-right text-sm font-medium [&_a]:text-indigo-600 [&_a:hover]:text-indigo-900">
-            {{ object.actions }}
+        <td class="py-3.5 px-3 space-x-3 text-right text-sm font-medium [&_a]:text-indigo-600 [&_a:hover]:text-indigo-900">
+            {% for action in object.actions %}
+                    <a href="{{ action.URL }}">{{ action.Name }}</a>
+            {% endfor %}
         </td>
 </tr>
 {% endfor %}
