@@ -13,6 +13,13 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+24.8
+====
+
+* Switched to using equality for role comparison checks.
+
+  This is an internal change, preparatory for future work.
+
 24.7
 ====
 

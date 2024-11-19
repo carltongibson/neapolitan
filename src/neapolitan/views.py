@@ -185,7 +185,7 @@ class CRUDView(View):
     def show_form(self, request, *args, **kwargs):
         """GET handler for the create and update form views."""
 
-        if self.role is Role.UPDATE:
+        if self.role == Role.UPDATE:
             self.object = self.get_object()
         form = self.get_form(instance=self.object)
         context = self.get_context_data(form=form)
@@ -194,7 +194,7 @@ class CRUDView(View):
     def process_form(self, request, *args, **kwargs):
         """POST handler for the create and update form views."""
 
-        if self.role is Role.UPDATE:
+        if self.role == Role.UPDATE:
             self.object = self.get_object()
         form = self.get_form(
             data=request.POST,
@@ -295,7 +295,7 @@ class CRUDView(View):
             "'%s' must define 'model' or override 'get_success_url()'"
             % self.__class__.__name__
         )
-        if self.role is Role.DELETE:
+        if self.role == Role.DELETE:
             success_url = reverse(f"{self.url_base}-list")
         else:
             success_url = reverse(
