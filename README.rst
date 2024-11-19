@@ -81,5 +81,5 @@ Add ``neapolitan`` to your ``INSTALLED_APPS``:
         "neapolitan",
     ]
 
-Templates expect a ``base.html`` template to exist and for that to defined a
+Templates expect a ``base.html`` template to exist and for that template to define a
 ``content`` block. (Refs <https://github.com/carltongibson/neapolitan/issues/6>.)
