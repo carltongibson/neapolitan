@@ -274,7 +274,7 @@ class RoleTests(TestCase):
 
         for lookup in ['View', 'Edit', 'Delete']:
             self.assertNotContains(response, f'>{lookup}</a>')
-    
+
     def test_url_ordering_for_slug_path_converters(self):
         # Ensures correct ordering of URL patterns when using str-based path converters
         # https://github.com/carltongibson/neapolitan/issues/64
@@ -300,6 +300,24 @@ class RoleTests(TestCase):
 
         # Assert that the generated URL paths match the expected order
         self.assertEqual(url_paths, expected_paths)
+
+    def test_role_equality(self):
+        """
+        Role instances should be equal to themselves but not to other Role
+        instances.
+
+        Follows directly from Enum base class, but is preparatory to custom
+        roles.
+        """
+        # Basic examples:
+        self.assertEqual(Role.LIST, Role.LIST)
+        self.assertNotEqual(Role.LIST, Role.DETAIL)
+
+        # Exhaustive check:
+        for role in Role:
+            self.assertEqual(role, role)
+            for other_role in (r for r in Role if r != role):
+                self.assertNotEqual(role, other_role)
 
 
 class MktemplateCommandTest(TestCase):
