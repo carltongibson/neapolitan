@@ -8,15 +8,14 @@ register = template.Library()
 
 def action_links(view, object):
     actions = [
-        (url, name)
+        {"Name": name, "URL": url}
         for url, name in [
             (Role.DETAIL.maybe_reverse(view, object), "View"),
             (Role.UPDATE.maybe_reverse(view, object), "Edit"),
             (Role.DELETE.maybe_reverse(view, object), "Delete"),
         ] if url is not None
     ]
-    links = [f"<a href='{url}'>{anchor_text}</a>" for url, anchor_text in actions]
-    return mark_safe(" | ".join(links))
+    return actions
 
 
 @register.inclusion_tag("neapolitan/partial/detail.html")
@@ -68,4 +67,20 @@ def object_list(objects, view):
     return {
         "headers": headers,
         "object_list": object_list,
+    }
+
+
+@register.inclusion_tag("neapolitan/partial/pagination.html")
+def pagination(page_obj):
+    """
+    Renders pagination controls for the given page object.
+
+    Inclusion tag usage::
+
+        {% pagination page_obj %}
+
+    Template: ``neapolitan/partial/pagination.html`` - Will render the pagination controls.
+    """
+    return {
+        "page_obj": page_obj,
     }
