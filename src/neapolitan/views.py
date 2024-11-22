@@ -82,7 +82,7 @@ class Role(enum.Enum):
         return path(
             self.url_pattern(view_cls),
             view_cls.as_view(role=self),
-            name=f"{view_cls.url_base}-{self.url_name_component}"
+            name=f"{view_cls.url_base}-{self.url_name_component}",
         )
 
     def reverse(self, view, object=None):
@@ -383,6 +383,12 @@ class CRUDView(View):
             context_object_name = self.get_context_object_name()
             if context_object_name:
                 kwargs[context_object_name] = self.object
+            kwargs["detail_view_url"] = Role.DETAIL.maybe_reverse(self, self.object)
+            kwargs["update_view_url"] = Role.UPDATE.maybe_reverse(self, self.object)
+            kwargs["delete_view_url"] = Role.DELETE.maybe_reverse(self, self.object)
+
+        kwargs["list_view_url"] = Role.LIST.maybe_reverse(self)
+        kwargs["create_view_url"] = Role.CREATE.maybe_reverse(self)
 
         if getattr(self, "object_list", None) is not None:
             kwargs["object_list"] = self.object_list
