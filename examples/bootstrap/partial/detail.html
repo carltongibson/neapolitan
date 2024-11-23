@@ -1,0 +1,12 @@
+{# partial/detail.html - Detail partial template #}
+<div class="card">
+    <div class="card-body">
+        <dl class="row mb-0">
+        {% for field, val in object %}
+            <dt class="col-sm-3">{{ field|capfirst }}:</dt>
+            <dd class="col-sm-9">{{ val }}</dd>
+        {% endfor %}
+        </dl>
+    </div>
+</div>
+

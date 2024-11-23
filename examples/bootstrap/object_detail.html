@@ -1,0 +1,10 @@
+{# object_detail.html - Detail view template #}
+{% extends "base.html" %}
+{% load neapolitan %}
+
+{% block content %}
+<h1 class="h3 mb-4">{{ object }}</h1>
+{% object_detail object view.fields %}
+{% endblock %}
+
+
