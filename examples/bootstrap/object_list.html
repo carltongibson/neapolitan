@@ -1,0 +1,28 @@
+{# object_list.html - Main list template #}
+{% extends "base.html" %}
+{% load neapolitan %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <div class="flex-grow-1">
+        <h1 class="h3">{{ object_verbose_name_plural|capfirst }}</h1>
+    </div>
+    {% if create_view_url %}
+    <div class="ms-auto">
+        <a href="{{ create_view_url }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Add a new {{ object_verbose_name }}
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% if object_list %}
+    {% object_list object_list view %}
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">There are no {{ object_verbose_name_plural }}. Create one now?</p>
+    </div>
+{% endif %}
+{% endblock %}
+

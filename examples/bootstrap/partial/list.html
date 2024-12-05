@@ -1,0 +1,26 @@
+{# partial/list.html - List partial template #}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                <th>{{ header|capfirst }}</th>
+                {% endfor %}
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in object_list %}
+            <tr>
+                {% for field in object.fields %}
+                <td>{{ field }}</td>
+                {% endfor %}
+                <td class="text-end">
+                    {{ object.actions }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
