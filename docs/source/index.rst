@@ -44,6 +44,7 @@ I want easy CRUD views for it, without it taking all day::
 
     # urls.py
     from neapolitan.views import CRUDView
+    from .models import Bookmark
 
     class BookmarkView(CRUDView):
         model = Bookmark
