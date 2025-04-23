@@ -351,7 +351,7 @@ class CRUDView(View):
             return None
 
         return filterset_class(
-            self.request.GET,
+            self.request.GET or None, # None is required for the filterset to be unbound
             queryset=queryset,
             request=self.request,
         )

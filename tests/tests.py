@@ -72,6 +72,10 @@ class BasicTests(TestCase):
         response = self.client.get("/bookmark/")
         self.assertEqual(response.status_code, 200)
         self.assertIn("filterset", response.context)
+        filterset = response.context["filterset"]
+        # no filtering was done, so the filterset (and it's form) should not be bound
+        self.assertFalse(filterset.is_bound)
+        self.assertFalse(filterset.form.is_bound)
         self.assertContains(response, self.homepage.title)
         self.assertContains(response, self.github.title)
         self.assertContains(response, self.fosstodon.title)
