@@ -6,6 +6,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import TemplateDoesNotExist, get_template
 from django.template.engine import Engine
 from django.apps import apps
+from django.conf import settings
+
 
 class Command(BaseCommand):
     help = "Bootstrap a CRUD template for a model, copying from the active neapolitan default templates."
@@ -64,8 +66,37 @@ class Command(BaseCommand):
             dest="role",
             help="Delete role",
         )
+        group.add_argument(
+            "--all",
+            action="store_const",
+            const="all",
+            dest="role",
+            help="Generate all CRUD templates (list, detail, form, delete)",
+        )
 
     def handle(self, *args, **options):
+        model = options["model"]
+        role = options["role"]
+
+        # Handle --all option
+        if role == "all":
+            roles = ["list", "detail", "form", "delete"]
+            for r in roles:
+                options["role"] = r
+                try:
+                    self._handle_single_template(*args, **options)
+                except CommandError as e:
+                    # Continue with other templates even if one exists
+                    if "already exists" in str(e):
+                        continue
+                    else:
+                        raise
+            return
+
+        # Handle single template
+        self._handle_single_template(*args, **options)
+
+    def _handle_single_template(self, *args, **options):
         model = options["model"]
         role = options["role"]
 
@@ -97,13 +128,26 @@ class Command(BaseCommand):
             target_dir = f"{app_config.path}/templates"
             if not Path(target_dir).exists():
                 try:
-                    target_dir = Engine.get_default().template_dirs[0]
-                except (ImproperlyConfigured, IndexError):
-                    raise CommandError(
-                        "No app or project level template dir found."
-                    )
+                    # FIX: Access DIRS from the template settings instead of template_dirs
+                    template_settings = settings.TEMPLATES[0]
+                    if template_settings.get('DIRS'):
+                        target_dir = template_settings['DIRS'][0]
+                    else:
+                        # No project-level template dir, so create app-level templates
+                        target_dir = f"{app_config.path}/templates"
+                except (ImproperlyConfigured, IndexError, KeyError):
+                    # Fallback to creating app-level templates
+                    target_dir = f"{app_config.path}/templates"
+
+            # Ensure the full directory path exists
+            target_path = Path(target_dir) / Path(template_name).parent
+            target_path.mkdir(parents=True, exist_ok=True)
+
             # Copy the neapolitan template to the target directory with template_name.
             shutil.copyfile(neapolitan_template_path, f"{target_dir}/{template_name}")
+            self.stdout.write(
+                self.style.SUCCESS(f"Successfully created template: {target_dir}/{template_name}")
+            )
         else:
             self.stdout.write(
                 f"Template {template_name} already exists. Remove it manually if you want to regenerate it."
