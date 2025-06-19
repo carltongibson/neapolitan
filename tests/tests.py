@@ -331,3 +331,21 @@ class MktemplateCommandTest(TestCase):
 
         # Remove the created file
         os.remove(file_path)
+
+    def test_mktemplate_all_command(self):
+        # Run the command with --all
+        call_command("mktemplate", "tests.Bookmark", "--all")
+
+        # Check if all files were created
+        expected_files = [
+            "tests/templates/tests/bookmark_list.html",
+            "tests/templates/tests/bookmark_detail.html",
+            "tests/templates/tests/bookmark_form.html",
+            "tests/templates/tests/bookmark_confirm_delete.html",
+        ]
+
+        for file_path in expected_files:
+            self.assertTrue(os.path.isfile(file_path))
+            # Clean up
+            os.remove(file_path)
+
