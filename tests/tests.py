@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from django.core.management import call_command
 from django.http import HttpResponse
@@ -167,6 +168,21 @@ class BasicTests(TestCase):
         response = self.client.get(f"/named_collections/{self.main_collection.code}/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.main_collection.name)
+
+    def test_custom_lookup_field_create(self):
+        create_url = reverse("named_collections-create")
+
+        # Submit the form.
+        response = self.client.post(
+            create_url,
+            {
+                "code": uuid.uuid4(),
+                "name": "The Carlton Collection",
+            },
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.resolver_match.url_name, "named_collections-detail")
 
     def test_lookup_url_converter(self):
         """Test view.lookup_url_converter"""

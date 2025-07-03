@@ -296,11 +296,9 @@ class CRUDView(View):
             % self.__class__.__name__
         )
         if self.role == Role.DELETE:
-            success_url = reverse(f"{self.url_base}-list")
+            success_url = Role.LIST.reverse(self)
         else:
-            success_url = reverse(
-                f"{self.url_base}-detail", kwargs={"pk": self.object.pk}
-            )
+            success_url = Role.DETAIL.reverse(self, self.object)
         return success_url
 
     # Pagination and filtering
