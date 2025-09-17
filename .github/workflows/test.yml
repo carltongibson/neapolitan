@@ -29,13 +29,16 @@ jobs:
             django-version: "main"
           - python-version: "3.11"
             django-version: "main"
+        include:
+          - python-version: "3.14"
+            django-version: "5.2"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: extractions/setup-just@v1
+      - uses: extractions/setup-just@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
@@ -73,12 +76,12 @@ jobs:
       PYTHON_MIN_VERSION: "3.10"
       DJANGO_MIN_VERSION: "4.2"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: extractions/setup-just@v1
+      - uses: extractions/setup-just@v3
 
       - name: Set up Python ${{ env.PYTHON_MIN_VERSION }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_MIN_VERSION }}
           cache: "pip"
