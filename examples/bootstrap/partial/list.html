@@ -13,7 +13,7 @@
             {% for object in object_list %}
             <tr>
                 {% for field in object.fields %}
-                <td>{{ field }}</td>
+                <td>{{ field.value }}</td>
                 {% endfor %}
                 <td class="text-end">
                     {{ object.actions }}
