@@ -378,6 +378,7 @@ class CRUDView(View):
 
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object
+            kwargs["update_view_url"] = Role.UPDATE.maybe_reverse(self, self.object)
             context_object_name = self.get_context_object_name()
             if context_object_name:
                 kwargs[context_object_name] = self.object

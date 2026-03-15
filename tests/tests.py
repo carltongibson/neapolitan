@@ -136,6 +136,7 @@ class BasicTests(TestCase):
         # Load the form.
         response = self.client.get(update_url)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, f'action="/bookmark/{self.homepage.pk}/edit/"')
 
         # Submit the form.
         response = self.client.post(

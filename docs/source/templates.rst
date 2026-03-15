@@ -64,15 +64,29 @@ See ``python manage.py mktemplate --help`` for full details.
 
 Used for both the create and update views.
 
-``neapolitan/object_list.html``
+``neapolitan/object_form.html``
 
 Context variables:
 
-* ``object``: the object being updated, if present.
+* ``object``: the object being updated (for the update view)
 * ``object_verbose_name``: the verbose name of the object, e.g. ``bookmark``.
 * ``form``: the form.
 * ``create_view_url``: the URL for the create view.
 * ``update_view_url``: the URL for the update view.
+
+``object_list.html``
+--------------------
+
+Used for the list view.
+
+``neapolitan/object_list.html``
+
+Context variables:
+
+* ``object_list``: the list of objects.
+* ``object_verbose_name``: the verbose name of the object, e.g. ``bookmark``.
+* ``object_verbose_name_plural``: the plural verbose name, e.g. ``bookmarks``.
+* ``create_view_url``: the URL for the create view.
 
 ``object_confirm_delete.html``
 ------------------------------
