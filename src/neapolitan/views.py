@@ -375,7 +375,8 @@ class CRUDView(View):
         kwargs["object_verbose_name"] = self.model._meta.verbose_name
         kwargs["object_verbose_name_plural"] = self.model._meta.verbose_name_plural
         kwargs["create_view_url"] = Role.CREATE.maybe_reverse(self)
-
+        kwargs["list_view_url"] = Role.LIST.maybe_reverse(self)
+        
         if getattr(self, "object", None) is not None:
             kwargs["object"] = self.object
             kwargs["update_view_url"] = Role.UPDATE.maybe_reverse(self, self.object)
