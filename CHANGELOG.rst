@@ -13,6 +13,17 @@ Version numbers correspond to git tags. Please use the compare view on GitHub
 for full details. Until we're further along, I will just note the highlights
 here:
 
+26.1
+====
+
+* Added update_view_url to object_form context.
+
+  This was referenced by the template by not available by default.
+
+  Thanks to Marcio Mazza.
+
+* Updated CI testing for latest Django and Python versions.
+
 25.1
 ====
 
