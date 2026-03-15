@@ -16,7 +16,7 @@ Repository = "https://github.com/carltongibson/neapolitan"
 Docs = "https://noumenal.es/neapolitan/"
 
 [project.optional-dependencies]
-docs = ["Sphinx"]
+docs = ["Sphinx", "django-sphinx-view"]
 tests = ["coverage[toml]", "django_coverage_plugin"]
 
 [tool.coverage.run]
