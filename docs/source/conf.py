@@ -15,6 +15,7 @@ author = 'Carlton Gibson'
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx_view",
 ]
 
 templates_path = ['_templates']
