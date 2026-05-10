@@ -4,7 +4,7 @@ import uuid
 from django.core.management import call_command
 from django.http import HttpResponse
 from django.test import RequestFactory, TestCase
-from django.urls import reverse
+from django.urls import reverse, path, include
 from django.utils.html import escape
 
 from neapolitan.views import CRUDView, Role, classonlymethod
@@ -45,11 +45,15 @@ class BookmarkTagView(CRUDView):
     fields = ["bookmark", "tag"]
 
 
+app_urlpatterns = ([*BookmarkView.get_urls()], "bookmarks")
+
 urlpatterns = [
     *BookmarkView.get_urls(),
     *NamedCollectionView.get_urls(),
     *BookmarkListOnlyView.get_urls(),
     *BookmarkTagView.get_urls(),
+    path("namespaced/", include(app_urlpatterns, namespace="public")),
+    path("namespacedImplicitly/", include(app_urlpatterns)),
 ]
 
 
@@ -277,6 +281,58 @@ class RoleTests(TestCase):
             with self.subTest(role=role):
                 self.assertEqual(
                     role.reverse(BookmarkView, bookmark),
+                    url,
+                )
+
+    def test_role_namespaced_url_reversing(self):
+        bookmark = Bookmark.objects.create(
+            url="https://noumenal.es/",
+            title="Noumenal • Dr Carlton Gibson",
+            note="Carlton Gibson's homepage. Blog, Contact and Project links.",
+            favourite=True,
+        )
+        tests = [
+            (Role.LIST, "/namespaced/bookmark/"),
+            (Role.DETAIL, f"/namespaced/bookmark/{bookmark.pk}/"),
+            (Role.CREATE, "/namespaced/bookmark/new/"),
+            (Role.UPDATE, f"/namespaced/bookmark/{bookmark.pk}/edit/"),
+            (Role.DELETE, f"/namespaced/bookmark/{bookmark.pk}/delete/"),
+        ]
+
+        response = self.client.get("/namespaced/bookmark/")
+        self.assertEqual(response.status_code, 200)
+        view = response.context["view"]
+
+        for role, url in tests:
+            with self.subTest(role=role):
+                self.assertEqual(
+                    role.reverse(view, bookmark),
+                    url,
+                )
+
+    def test_role_app_url_reversing(self):
+        bookmark = Bookmark.objects.create(
+            url="https://noumenal.es/",
+            title="Noumenal • Dr Carlton Gibson",
+            note="Carlton Gibson's homepage. Blog, Contact and Project links.",
+            favourite=True,
+        )
+        tests = [
+            (Role.LIST, "/namespacedImplicitly/bookmark/"),
+            (Role.DETAIL, f"/namespacedImplicitly/bookmark/{bookmark.pk}/"),
+            (Role.CREATE, "/namespacedImplicitly/bookmark/new/"),
+            (Role.UPDATE, f"/namespacedImplicitly/bookmark/{bookmark.pk}/edit/"),
+            (Role.DELETE, f"/namespacedImplicitly/bookmark/{bookmark.pk}/delete/"),
+        ]
+
+        response = self.client.get("/namespacedImplicitly/bookmark/")
+        self.assertEqual(response.status_code, 200)
+        view = response.context["view"]
+
+        for role, url in tests:
+            with self.subTest(role=role):
+                self.assertEqual(
+                    role.reverse(view, bookmark),
                     url,
                 )
 

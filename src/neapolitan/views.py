@@ -1,4 +1,5 @@
 import enum
+from contextlib import suppress
 
 from django.core.exceptions import ImproperlyConfigured
 from django.core.paginator import InvalidPage, Paginator
@@ -88,6 +89,12 @@ class Role(enum.Enum):
     def reverse(self, view, object=None):
         url_name = f"{view.url_base}-{self.url_name_component}"
         url_kwarg = view.lookup_url_kwarg or view.lookup_field
+
+        with suppress(AttributeError):
+            url_namespace = view.request.resolver_match.namespace
+            if url_namespace:
+                url_name = f"{url_namespace}:{url_name}"
+
         match self:
             case Role.LIST | Role.CREATE:
                 return reverse(url_name)
